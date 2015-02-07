@@ -16,8 +16,11 @@ uint8_t animation_progress = 0;    // animation progress (0=start, 10=end)
 time_t last_time;
 
 // mode
-#define MODE_TIME 0  // Watch
-#define MODE_MENU 1  // Menu
+#define MODE_TIME 0      // Watch
+#define MODE_MENU 1      // Menu
+#define MODE_SETTINGS 2  // Settings
+#define MODE_SETTIME 3   // Date&Time
+
 uint8_t mode_current = MODE_MENU;
 
 
@@ -39,7 +42,6 @@ void loop(void) {
   getKeyPress();
   
   if (mode_current == MODE_MENU) {
-    
     // animation loop
     animation_progress = 0;
     while (animation_required){
@@ -58,6 +60,26 @@ void loop(void) {
     
     // update menu
     updateMenu();
+  }
+  else if (mode_current == MODE_SETTIME) {
+    // animation loop
+    animation_progress = 0;
+    while (animation_required){
+      
+      // picture loop
+      u8g.firstPage();
+      do  {
+        drawSettime();
+      } while( u8g.nextPage() ); 
+      
+      animation_progress += ANIMATION_STEP;
+      if (animation_progress > ANIMATION_MAXSTEP) {
+        animation_required = false;
+      }
+    } 
+    
+    // update menu
+    updateSettime();
   }
   else {
     if ( last_time < now() ) {

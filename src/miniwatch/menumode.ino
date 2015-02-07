@@ -1,7 +1,7 @@
 
 #define MENU_ITEMS 2
-char *menu_strings[MENU_ITEMS] = { "Watch", "Setting" };
-const uint8_t *icons[MENU_ITEMS] = {rook_bitmap, rook2_bitmap};
+char *menu_items[MENU_ITEMS] = { "Watch", "Setting" };
+const uint8_t *menu_icons[MENU_ITEMS] = {watch_bitmap, gear_bitmap};
 
 uint8_t menu_current = 0;
 uint8_t menu_prev = 0;
@@ -17,13 +17,13 @@ void drawMenu(void) {
   // selected item name
   u8g.setFont(u8g_font_04b_03r);
   u8g.setFontPosBottom();
-  u8g.drawStr(0, 32, menu_strings[menu_current]); 
+  u8g.drawStr(0, 32, menu_items[menu_current]); 
   
   // draw icon (16 x 16 pixel)
   for (int i=0;i<MENU_ITEMS;i++) {
     int offset = (i - menu_current) * 32 + (ANIMATION_MAXSTEP - animation_progress) * 3 * (menu_current - menu_prev);
     // TODO:clipping
-    u8g.drawBitmapP( 24 + offset, 7, 2, 16, icons[i]);
+    u8g.drawBitmapP( 24 + offset, 7, 2, 16, menu_icons[i]);
   }
   
   // icon frame(left)
@@ -70,8 +70,10 @@ void updateMenu(void) {
       if (menu_current == 0) {
           mode_current = MODE_TIME;
       } 
-      
-//      last_key_code = KEY_NONE;
+      else if (menu_current == 1) {
+          mode_current = MODE_SETTIME;
+      } 
+      animation_required = true;
       break;
   }
 }
