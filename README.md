@@ -1,0 +1,2 @@
+# miniwatch
+Aruduino Watch Project
