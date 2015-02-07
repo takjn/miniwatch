@@ -41,7 +41,7 @@ void drawWatch(void) {
 }
 
 
-void watchMenu(void) {
+void updateWatch(void) {
   if ( uiKeyCode != KEY_NONE && last_key_code == uiKeyCode ) {
     return;
   }

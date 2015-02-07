@@ -1,3 +1,12 @@
+boolean checkAnimationRequired(void) {
+  animation_progress += ANIMATION_STEP;
+  if (animation_progress > ANIMATION_MAXSTEP) {
+    animation_required = false;
+  }
+  
+  return animation_required;
+}
+
 void drawFrame(char *title, char *item) {
   u8g.setScale2x2();
 

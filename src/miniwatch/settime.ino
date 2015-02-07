@@ -129,13 +129,13 @@ void updateSettime(void) {
         setTime(hh, mi, 0, dd, mm, yy);
         settime_current = 0;
         settime_prev = 0;
-        mode_current = MODE_MENU;
+        mode_current = MODE_SETTINGS;
       }
       else if (settime_current == 6) {
         //  Cancel
         settime_current = 0;
         settime_prev = 0;
-        mode_current = MODE_MENU;
+        mode_current = MODE_SETTINGS;
       }
       
       animation_required = true;

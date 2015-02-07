@@ -1,7 +1,7 @@
 
-#define MENU_ITEMS 3
-char *menu_items[MENU_ITEMS] = { "Watch", "Setting", "Sound" };
-const uint8_t *menu_icons[MENU_ITEMS] = {watch_bitmap, gear_bitmap, gear_bitmap};
+#define MENU_ITEMS 2
+char *menu_items[MENU_ITEMS] = { "Watch", "Settings" };
+const uint8_t *menu_icons[MENU_ITEMS] = {watch_bitmap, gear_bitmap};
 
 uint8_t menu_current = 0;
 uint8_t menu_prev = 0;
@@ -50,13 +50,8 @@ void updateMenu(void) {
           mode_current = MODE_TIME;
       } 
       else if (menu_current == 1) {
-          initSettime();
-          mode_current = MODE_SETTIME;
-      } 
-      else if (menu_current == 2) {
-          initSetsound();
-          mode_current = MODE_SETSOUND;
-      } 
+          mode_current = MODE_SETTINGS;
+      }
       
       animation_required = true;
       break;

@@ -86,7 +86,7 @@ void updateSetsound(void) {
         buzzer_volume = volume;
         setsound_current = 0;
         setsound_prev = 0;
-        mode_current = MODE_MENU;
+        mode_current = MODE_SETTINGS;
       }
       
       animation_required = true;
