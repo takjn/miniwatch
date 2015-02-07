@@ -36,9 +36,18 @@ void getKeyPress(void) {
   else 
     uiKeyCodeFirst = KEY_NONE;
   
-  if ( uiKeyCodeSecond == uiKeyCodeFirst )
+  if ( uiKeyCodeSecond == uiKeyCodeFirst ) {
     uiKeyCode = uiKeyCodeFirst;
-  else
+    
+      if ( uiKeyCode != KEY_NONE && last_key_code != uiKeyCode ) {
+        analogWrite(BUZZER_PIN, buzzer_volumes[buzzer_volume]);
+        delay(10); 
+        analogWrite(BUZZER_PIN, 0);
+      }
+    
+  }
+  else {
     uiKeyCode = KEY_NONE;
+  }
 }
 

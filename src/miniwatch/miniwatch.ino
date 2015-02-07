@@ -5,6 +5,11 @@
 // devices with all constructor calls is here: http://code.google.com/p/u8glib/wiki/device
 U8GLIB_MINI12864 u8g(9, 10, 13, 11);
 
+// setting for buzzer
+#define BUZZER_PIN 5                           // pin for buzzer (need pwm)
+const int buzzer_volumes[4] = { 0, 1, 10, 50 };  // 4 steps volume (0=silence, 1024=max)
+int buzzer_volume = 1;                         // initial volume step
+
 // setting for animation
 #define ANIMATION_STEP 2      // animation smoothness (1=smooth, 10=no animation)
 #define ANIMATION_MAXSTEP 10  // animation max step
@@ -20,6 +25,7 @@ time_t last_time;
 #define MODE_MENU 1      // Menu
 #define MODE_SETTINGS 2  // Settings
 #define MODE_SETTIME 3   // Date&Time
+#define MODE_SETSOUND 4   // Date&Time
 
 uint8_t mode_current = MODE_MENU;
 
@@ -76,10 +82,30 @@ void loop(void) {
       if (animation_progress > ANIMATION_MAXSTEP) {
         animation_required = false;
       }
-    } 
+    }
     
     // update menu
     updateSettime();
+  }
+  else if (mode_current == MODE_SETSOUND) {
+    // animation loop
+    animation_progress = 0;
+    while (animation_required){
+      
+      // picture loop
+      u8g.firstPage();
+      do  {
+        drawSetsound();
+      } while( u8g.nextPage() ); 
+      
+      animation_progress += ANIMATION_STEP;
+      if (animation_progress > ANIMATION_MAXSTEP) {
+        animation_required = false;
+      }
+    }
+    
+    // update menu
+    updateSetsound();
   }
   else {
     if ( last_time < now() ) {

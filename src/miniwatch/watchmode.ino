@@ -10,8 +10,8 @@ void drawWatch(void) {
   s += day();
   s += " ";
   s += monthShortStr(month());
-  s += " ";
-  s += year();
+//  s += " ";
+//  s += year();
   s.toCharArray(buffer, 20);
   
   u8g.setFont(u8g_font_04b_03br);
