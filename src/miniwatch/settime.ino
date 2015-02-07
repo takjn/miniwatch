@@ -2,7 +2,7 @@
 char *settime_items[SETTIME_ITEMS] = { "Year", "Month", "Day", "Hour", "Minutes", "Save", "Cancel"};
 
 uint8_t settime_current = 0;
-uint8_t settime_prev = 0;
+uint8_t settime_prev = -1;
 
 int yy = 0;
 int mm = 0;
@@ -21,16 +21,14 @@ void initSettime(void) {
 void drawSettime(void) {
   drawFrame("DATE&TIME", settime_items[settime_current]);
   
-  // draw icon (16 x 16 pixel)
-  u8g.setScale2x2();
+  // draw icon (32 x 32 pixel)
+  u8g.setFont(u8g_font_freedoomr10r);
+  u8g.setFontPosCenter();
+  int aoffset = (ANIMATION_MAXSTEP - animation_progress) * (32 / ANIMATION_MAXSTEP) * (settime_current - settime_prev);
   for (int i=0;i<SETTIME_ITEMS;i++) {
-    int offset = (i - settime_current) * 32 + (ANIMATION_MAXSTEP - animation_progress) * 3 * (settime_current - settime_prev);
-    
-    u8g.setFont(u8g_font_freedoomr10r);
+    int offset = (i - settime_current) * 32 + aoffset;
     
     char buffer[3];
-    
-    u8g.setFontPosCenter();
     
     if (i < 5) {
       if (i == 0) {
@@ -48,19 +46,23 @@ void drawSettime(void) {
       else if (i == 4) {
         sprintf(buffer, "%02d", mi);
       }
+      
+      u8g.setScale2x2();
       u8g.drawStr(26 + offset, 16, buffer); 
+      u8g.undoScale();
     }
     else {
-      if (i == 5) {
-        u8g.drawBitmapP( 24 + offset, 7, 2, 16, check_bitmap);
-      }
-      else if (i == 6){
-        u8g.drawBitmapP( 24 + offset, 7, 2, 16, x_bitmap);
+      int x = (24 + offset) * 2;
+      if (x < 128) {
+        if (i == 5) {
+          u8g.drawBitmapP(x, 14, 4, 32, check_bitmap);
+        }
+        else if (i == 6){
+          u8g.drawBitmapP(x, 14, 4, 32, action_undo_note_bitmap);
+        }
       }
     }
   }
-  u8g.undoScale();
-  
 }
 
 void updateSettime(void) {
@@ -128,13 +130,13 @@ void updateSettime(void) {
         // Save
         setTime(hh, mi, 0, dd, mm, yy);
         settime_current = 0;
-        settime_prev = 0;
+        settime_prev = -1;
         mode_current = MODE_SETTINGS;
       }
       else if (settime_current == 6) {
         //  Cancel
         settime_current = 0;
-        settime_prev = 0;
+        settime_prev = -1;
         mode_current = MODE_SETTINGS;
       }
       

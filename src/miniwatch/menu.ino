@@ -4,18 +4,17 @@ char *menu_items[MENU_ITEMS] = { "Watch", "Settings" };
 const uint8_t *menu_icons[MENU_ITEMS] = {clock_bitmap, cog_bitmap};
 
 uint8_t menu_current = 0;
-uint8_t menu_prev = 0;
+uint8_t menu_prev = -1;
 
 void drawMenu(void) {
   drawFrame("MENU", menu_items[menu_current]);
   
-  // draw icon (16 x 16 pixel)
-  u8g.setScale2x2();
+  // draw icon (32 x 32 pixel)
+  int aoffset = (ANIMATION_MAXSTEP - animation_progress) * (64 / ANIMATION_MAXSTEP) * (menu_current - menu_prev);
   for (int i=0;i<MENU_ITEMS;i++) {
-    int offset = (i - menu_current) * 32 + (ANIMATION_MAXSTEP - animation_progress) * 3 * (menu_current - menu_prev);
-    u8g.drawBitmapP( 24 + offset, 7, 2, 16, menu_icons[i]);
+    int offset = (i - menu_current) * 64 + aoffset;
+    u8g.drawBitmapP(48 + offset, 14, 4, 32, menu_icons[i]);
   }
-  u8g.undoScale();
   
 }
 
@@ -53,6 +52,8 @@ void updateMenu(void) {
           mode_current = MODE_SETTINGS;
       }
       
+      menu_current = 0;
+      menu_prev = -1;
       animation_required = true;
       break;
   }

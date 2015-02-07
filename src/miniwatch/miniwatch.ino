@@ -18,6 +18,11 @@ int buzzer_volume = 1;                         // initial volume step
 boolean animation_required = true;
 uint8_t animation_progress = 0;    // animation progress (0=start, 10=end)
 
+// variables for transition
+boolean transition_required = true;
+uint8_t transition_offset = 0;
+
+
 // variables for watch
 time_t last_time;
 
@@ -28,6 +33,7 @@ time_t last_time;
 #define MODE_SETTIME 3   // Date&Time
 #define MODE_SETSOUND 4   // Date&Time
 uint8_t mode_current = MODE_MENU;
+uint8_t mode_prev = MODE_MENU;
 
 void setup(void) {
   // flip screen, if required
@@ -116,6 +122,9 @@ void loop(void) {
     updateWatch();
   }
   
-  delay(10);  
+  //  check transition
+  checkTransitionRequired();
+  
+  delay(10);
 }
 

@@ -3,19 +3,18 @@ char *settings_items[SETTINGS_ITEMS] = { "Date&Time", "Sound", "Back"};
 const uint8_t *settings_icons[SETTINGS_ITEMS] = {clock_bitmap, musical_note_bitmap, action_undo_note_bitmap};
 
 uint8_t settings_current = 0;
-uint8_t settings_prev = 0;
+uint8_t settings_prev = -1;
 
 void drawSettings(void) {
   drawFrame("SETTINGS", settings_items[settings_current]);
   
-  // draw icon (16 x 16 pixel)
-  u8g.setScale2x2();
+  // draw icon (32 x 32 pixel)
+  int aoffset = (ANIMATION_MAXSTEP - animation_progress) * (64 / ANIMATION_MAXSTEP) * (settings_current - settings_prev);
   for (int i=0;i<SETTINGS_ITEMS;i++) {
-    int offset = (i - settings_current) * 32 + (ANIMATION_MAXSTEP - animation_progress) * 3 * (settings_current - settings_prev);
-    u8g.drawBitmapP( 24 + offset, 7, 2, 16, settings_icons[i]);
+    int offset = (i - settings_current) * 64 + aoffset;
+    u8g.drawBitmapP(48 + offset, 14, 4, 32, settings_icons[i]);
   }
-  u8g.undoScale();
-  
+
 }
 
 void updateSettings(void) {
@@ -57,7 +56,7 @@ void updateSettings(void) {
       else if (settings_current == 2) {
         //  Back
         settings_current = 0;
-        settings_prev = 0;
+        settings_prev = -1;
         mode_current = MODE_MENU;
       }
       

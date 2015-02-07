@@ -2,7 +2,7 @@
 char *setsound_items[SETSOUND_ITEMS] = { "Volume", "Save", "Cancel"};
 
 uint8_t setsound_current = 0;
-uint8_t setsound_prev = 0;
+uint8_t setsound_prev = -1;
 
 int volume = 0;
 
@@ -13,10 +13,10 @@ void initSetsound(void) {
 void drawSetsound(void) {
   drawFrame("SOUND", setsound_items[setsound_current]);
   
-  // draw icon (16 x 16 pixel)
-  u8g.setScale2x2();
+  // draw icon (32 x 32 pixel)
+  int aoffset = (ANIMATION_MAXSTEP - animation_progress) * (32 / ANIMATION_MAXSTEP) * (setsound_current - setsound_prev);
   for (int i=0;i<SETSOUND_ITEMS;i++) {
-    int offset = (i - setsound_current) * 32 + (ANIMATION_MAXSTEP - animation_progress) * 3 * (setsound_current - setsound_prev);
+    int offset = (i - setsound_current) * 32 + aoffset;
     
     u8g.setFont(u8g_font_freedoomr10r);
     u8g.setFontPosCenter();
@@ -27,18 +27,19 @@ void drawSetsound(void) {
         sprintf(buffer, "%02d", buzzer_volume);
       }
       
+      u8g.setScale2x2();
       u8g.drawStr(26 + offset, 16, buffer); 
+      u8g.undoScale();
     }
     else {
       if (i == 1) {
-        u8g.drawBitmapP( 24 + offset, 7, 2, 16, check_bitmap);
+        u8g.drawBitmapP((24 + offset) * 2, 14, 4, 32, check_bitmap);
       }
       else if (i == 2){
-        u8g.drawBitmapP( 24 + offset, 7, 2, 16, x_bitmap);
+        u8g.drawBitmapP((24 + offset) * 2, 14, 4, 32, action_undo_note_bitmap);
       }
     }
   }
-  u8g.undoScale();
   
 }
 
@@ -78,14 +79,14 @@ void updateSetsound(void) {
       else if (setsound_current == 1) {
         // Save
         setsound_current = 0;
-        setsound_prev = 0;
+        setsound_prev = -1;
         mode_current = MODE_SETTINGS;
       }
       else if (setsound_current == 2) {
         //  Cancel
         buzzer_volume = volume;
         setsound_current = 0;
-        setsound_prev = 0;
+        setsound_prev = -1;
         mode_current = MODE_SETTINGS;
       }
       
