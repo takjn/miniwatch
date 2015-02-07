@@ -20,8 +20,6 @@ uint8_t animation_progress = 0;    // animation progress (0=start, 10=end)
 
 // variables for transition
 boolean transition_required = true;
-uint8_t transition_offset = 0;
-
 
 // variables for watch
 time_t last_time;
@@ -109,13 +107,17 @@ void loop(void) {
   }
   else {
     if ( last_time < now() ) {
-      // picture loop
-      u8g.firstPage(); 
-      do {
-        drawWatch();
-      } while( u8g.nextPage() );
+      while (checkAnimationRequired()) {      
+        // picture loop
+        u8g.firstPage(); 
+        do {
+          drawWatch();
+        } while( u8g.nextPage() );
+      }
       
       last_time = now();
+      animation_progress = 0;
+      animation_required = true;
     }
     
     // show main menu 

@@ -39,12 +39,10 @@ void getKeyPress(void) {
   if ( uiKeyCodeSecond == uiKeyCodeFirst ) {
     uiKeyCode = uiKeyCodeFirst;
     
-      if ( uiKeyCode != KEY_NONE && last_key_code != uiKeyCode ) {
-        analogWrite(BUZZER_PIN, buzzer_volumes[buzzer_volume]);
-        delay(10); 
-        analogWrite(BUZZER_PIN, 0);
-      }
-    
+    // buzzer
+    if ( uiKeyCode != KEY_NONE && last_key_code != uiKeyCode && mode_current != MODE_SETSOUND) {
+      beep();
+    }
   }
   else {
     uiKeyCode = KEY_NONE;

@@ -58,6 +58,7 @@ void updateSetsound(void) {
       else {
         setsound_current = 0;
       }
+      beep();
       animation_required = true;
       break;
     case KEY_PREV:
@@ -68,6 +69,7 @@ void updateSetsound(void) {
         setsound_current = (SETSOUND_ITEMS - 1);
       }
 
+      beep();
       animation_required = true;
       break;
     case KEY_SELECT:
@@ -90,8 +92,9 @@ void updateSetsound(void) {
         mode_current = MODE_SETTINGS;
       }
       
+      beep();
       animation_required = true;
       break;
-  }
+  }  
 }
 

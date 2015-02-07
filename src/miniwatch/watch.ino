@@ -2,6 +2,12 @@
 void drawWatch(void) {
   char buffer[20];
   
+  int header_offset = 0;
+  if (transition_required) {
+    header_offset = (ANIMATION_MAXSTEP - animation_progress);
+  }
+
+  
   String s = dayShortStr(weekday());
   s += " ";
   if (day()<10) {
@@ -17,7 +23,7 @@ void drawWatch(void) {
   u8g.setFont(u8g_font_04b_03br);
   u8g.setFontPosTop();
   u8g.setScale2x2();
-  u8g.drawStr(0, 0, buffer); 
+  u8g.drawStr(0, 0 - header_offset, buffer); 
   u8g.undoScale();
 
 
@@ -34,9 +40,9 @@ void drawWatch(void) {
   u8g.undoScale();
   
   // battery status
-  u8g.drawFrame(0, 56 ,16, 8);
-  u8g.drawBox(2, 58 ,12, 4);
-  u8g.drawLine(16, 58 ,16, 61);
+  u8g.drawFrame(0, 56 + header_offset,16, 8 + header_offset);
+  u8g.drawBox(2, 58 + header_offset,12, 4 + header_offset);
+  u8g.drawLine(16, 58 + header_offset,16, 61 + header_offset);
   
 }
 
