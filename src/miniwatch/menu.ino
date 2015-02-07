@@ -1,7 +1,7 @@
 
 #define MENU_ITEMS 2
 char *menu_items[MENU_ITEMS] = { "Watch", "Settings" };
-const uint8_t *menu_icons[MENU_ITEMS] = {watch_bitmap, gear_bitmap};
+const uint8_t *menu_icons[MENU_ITEMS] = {clock_bitmap, cog_bitmap};
 
 uint8_t menu_current = 0;
 uint8_t menu_prev = 0;

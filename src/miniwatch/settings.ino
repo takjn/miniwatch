@@ -1,6 +1,6 @@
 #define SETTINGS_ITEMS 3
 char *settings_items[SETTINGS_ITEMS] = { "Date&Time", "Sound", "Back"};
-const uint8_t *settings_icons[SETTINGS_ITEMS] = {watch_bitmap, gear_bitmap, gear_bitmap};
+const uint8_t *settings_icons[SETTINGS_ITEMS] = {clock_bitmap, musical_note_bitmap, action_undo_note_bitmap};
 
 uint8_t settings_current = 0;
 uint8_t settings_prev = 0;
@@ -12,7 +12,7 @@ void drawSettings(void) {
   u8g.setScale2x2();
   for (int i=0;i<SETTINGS_ITEMS;i++) {
     int offset = (i - settings_current) * 32 + (ANIMATION_MAXSTEP - animation_progress) * 3 * (settings_current - settings_prev);
-    u8g.drawBitmapP( 24 + offset, 7, 2, 16, settings_icons[settings_current]);
+    u8g.drawBitmapP( 24 + offset, 7, 2, 16, settings_icons[i]);
   }
   u8g.undoScale();
   

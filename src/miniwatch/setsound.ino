@@ -31,10 +31,10 @@ void drawSetsound(void) {
     }
     else {
       if (i == 1) {
-        u8g.drawBitmapP( 24 + offset, 7, 2, 16, watch_bitmap);
+        u8g.drawBitmapP( 24 + offset, 7, 2, 16, check_bitmap);
       }
       else if (i == 2){
-        u8g.drawBitmapP( 24 + offset, 7, 2, 16, gear_bitmap);
+        u8g.drawBitmapP( 24 + offset, 7, 2, 16, x_bitmap);
       }
     }
   }
@@ -79,7 +79,7 @@ void updateSetsound(void) {
         // Save
         setsound_current = 0;
         setsound_prev = 0;
-        mode_current = MODE_MENU;
+        mode_current = MODE_SETTINGS;
       }
       else if (setsound_current == 2) {
         //  Cancel

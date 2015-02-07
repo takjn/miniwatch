@@ -52,10 +52,10 @@ void drawSettime(void) {
     }
     else {
       if (i == 5) {
-        u8g.drawBitmapP( 24 + offset, 7, 2, 16, watch_bitmap);
+        u8g.drawBitmapP( 24 + offset, 7, 2, 16, check_bitmap);
       }
       else if (i == 6){
-        u8g.drawBitmapP( 24 + offset, 7, 2, 16, gear_bitmap);
+        u8g.drawBitmapP( 24 + offset, 7, 2, 16, x_bitmap);
       }
     }
   }

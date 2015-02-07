@@ -3,7 +3,7 @@
 
 // U8GLIB constructor
 // devices with all constructor calls is here: http://code.google.com/p/u8glib/wiki/device
-U8GLIB_MINI12864 u8g(9, 10, 13, 11);
+U8GLIB_MINI12864 u8g(9, 10, 13, 11, 12);
 
 // setting for buzzer
 #define BUZZER_PIN 5                           // pin for buzzer (need pwm)
