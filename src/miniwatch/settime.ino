@@ -1,5 +1,5 @@
 #define SETTIME_ITEMS 7
-const char *settime_items[SETTIME_ITEMS] = { "Year", "Month", "Day", "Hour", "Minutes", "Save", "Cancel"};
+char *settime_items[SETTIME_ITEMS] = { "Year", "Month", "Day", "Hour", "Minutes", "Save", "Cancel"};
 
 uint8_t settime_current = 0;
 uint8_t settime_prev = 0;
@@ -19,19 +19,10 @@ void initSettime(void) {
 }
 
 void drawSettime(void) {
-  u8g.setScale2x2();
-
-  // title
-  u8g.setFont(u8g_font_04b_03br);
-  u8g.setFontPosTop();
-  u8g.drawStr(0, 0, "DATE&TIME"); 
-  
-  // selected item name
-  u8g.setFont(u8g_font_04b_03r);
-  u8g.setFontPosBottom();
-  u8g.drawStr(0, 32, settime_items[settime_current]); 
+  drawFrame("DATE&TIME", settime_items[settime_current]);
   
   // draw icon (16 x 16 pixel)
+  u8g.setScale2x2();
   for (int i=0;i<SETTIME_ITEMS;i++) {
     int offset = (i - settime_current) * 32 + (ANIMATION_MAXSTEP - animation_progress) * 3 * (settime_current - settime_prev);
     
@@ -68,17 +59,6 @@ void drawSettime(void) {
       }
     }
   }
-  
-  // icon frame(left)
-  u8g.drawLine(18,8,18,22);
-  u8g.drawLine(18,8,20,8);
-  u8g.drawLine(18,22,20,22);
-  
-  // icon frame(right)
-  u8g.drawLine(46,8,46,22);
-  u8g.drawLine(44,8,46,8);
-  u8g.drawLine(44,22,46,22);
-  
   u8g.undoScale();
   
 }
