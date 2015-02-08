@@ -1,5 +1,5 @@
-#define SETDISPLAY_ITEMS 3
-char *setdisplay_items[SETDISPLAY_ITEMS] = { "Contrast", "Flip", "Back"};
+#define SETDISPLAY_ITEMS 4
+char *setdisplay_items[SETDISPLAY_ITEMS] = { "Brightness", "Contrast", "Flip", "Back"};
 
 uint8_t setdisplay_current = 0;
 uint8_t setdisplay_prev = -1;
@@ -16,11 +16,14 @@ void drawSetdisplay(void) {
     u8g.setFontPosCenter();
     
     char buffer[4];
-    if (i < 2) {
+    if (i < 3) {
       if (i == 0) {
-        sprintf(buffer, "%03d", display_contrasts[display_contrast]);
+        sprintf(buffer, "%03d", display_brightnesses[display_brightness]);
       }
       else if (i == 1) {
+        sprintf(buffer, "%03d", display_contrasts[display_contrast]);
+      }
+      else if (i == 2) {
         if (display_flip) {
           sprintf(buffer, "%s", "YES");
         }
@@ -68,19 +71,25 @@ void updateSetdisplay(void) {
       break;
     case KEY_SELECT:
       if (setdisplay_current == 0) {
+        display_brightness++;
+        if (display_brightness > 3)
+          display_brightness = 0;
+          analogWrite(DISPLAY_BACKLIGHT_PIN, display_brightnesses[display_brightness]);
+      }
+      else if (setdisplay_current == 1) {
         display_contrast++;
         if (display_contrast > 3)
           display_contrast = 0;
         u8g.setContrast(display_contrasts[display_contrast]);
       }
-      else if (setdisplay_current == 1) {
+      else if (setdisplay_current == 2) {
         display_flip = !display_flip;
         if (display_flip)
           u8g.setRot180();
         else
           u8g.undoRotation();
       }
-      else if (setdisplay_current == 2) {
+      else if (setdisplay_current == 3) {
         //  Back
         setdisplay_current = 0;
         setdisplay_prev = -1;

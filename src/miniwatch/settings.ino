@@ -12,7 +12,7 @@ void drawSettings(void) {
   int aoffset = (ANIMATION_MAXSTEP - animation_progress) * (64 / ANIMATION_MAXSTEP) * (settings_current - settings_prev);
   for (int i=0;i<SETTINGS_ITEMS;i++) {
     int x = 48 + (i - settings_current) * 64 + aoffset;
-    if (x < 128)
+    if (x < 128 && x > -64)
       u8g.drawBitmapP(x, 14, 4, 32, settings_icons[i]);
   }
 

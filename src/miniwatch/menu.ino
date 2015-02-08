@@ -12,10 +12,11 @@ void drawMenu(void) {
   // draw icon (32 x 32 pixel)
   int aoffset = (ANIMATION_MAXSTEP - animation_progress) * (64 / ANIMATION_MAXSTEP) * (menu_current - menu_prev);
   for (int i=0;i<MENU_ITEMS;i++) {
-    int offset = (i - menu_current) * 64 + aoffset;
-    u8g.drawBitmapP(48 + offset, 14, 4, 32, menu_icons[i]);
+    int x = 48 + (i - menu_current) * 64 + aoffset;
+    if (x < 128 && x > -64)
+      u8g.drawBitmapP(x, 14, 4, 32, menu_icons[i]);
   }
-  
+
 }
 
 void updateMenu(void) {
