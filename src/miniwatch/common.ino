@@ -1,6 +1,6 @@
 void beep(void) {
     analogWrite(BUZZER_PIN, buzzer_volumes[buzzer_volume]);
-    delay(10); 
+    delay(BUZZER_DELAY); 
     analogWrite(BUZZER_PIN, 0);
 }
 

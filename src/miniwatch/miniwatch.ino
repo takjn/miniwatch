@@ -7,7 +7,8 @@ U8GLIB_MINI12864 u8g(9, 10, 13, 11, 12);
 
 // setting for buzzer
 #define BUZZER_PIN 5                           // pin for buzzer (need pwm)
-const int buzzer_volumes[4] = { 0, 1, 10, 50 };  // 4 steps volume (0=silence, 1024=max)
+#define BUZZER_DELAY 15                        // millisec
+const int buzzer_volumes[4] = { 0, 1, 5, 10 };  // 4 steps volume (0=silence, 1024=max)
 int buzzer_volume = 1;                         // initial volume step
 
 // setting for animation
@@ -29,7 +30,8 @@ time_t last_time;
 #define MODE_MENU 1      // Menu
 #define MODE_SETTINGS 2  // Settings
 #define MODE_SETTIME 3   // Date&Time
-#define MODE_SETSOUND 4   // Date&Time
+#define MODE_SETSOUND 4  // Date&Time
+#define MODE_STOPWATCH 5 // Stopwatch
 uint8_t mode_current = MODE_MENU;
 uint8_t mode_prev = MODE_MENU;
 
@@ -46,64 +48,35 @@ void setup(void) {
   keySetup();  // setup key detection and debounce algorithm
 }
 
-void loop(void) {
-  getKeyPress();
-  
-  if (mode_current == MODE_MENU) {
+void animationLoop(void (*draw)(void), void (*keyhandler)(void)) {
     // animation loop
     animation_progress = 0;
     while (checkAnimationRequired()) {      
       // picture loop
       u8g.firstPage();
       do  {
-        drawMenu();
+        draw();
       } while( u8g.nextPage() ); 
     } 
     
     // update menu
-    updateMenu();
+    keyhandler();
+} 
+
+void loop(void) {
+  getKeyPress();
+  
+  if (mode_current == MODE_MENU) {
+    animationLoop(drawMenu, updateMenu);
   }
   else if (mode_current == MODE_SETTINGS) {
-    // animation loop
-    animation_progress = 0;
-    while (checkAnimationRequired()) {      
-      // picture loop
-      u8g.firstPage();
-      do  {
-        drawSettings();
-      } while( u8g.nextPage() ); 
-    }
-    
-    // update menu
-    updateSettings();
+    animationLoop(drawSettings, updateSettings);
   }
   else if (mode_current == MODE_SETTIME) {
-    // animation loop
-    animation_progress = 0;
-    while (checkAnimationRequired()) {      
-      // picture loop
-      u8g.firstPage();
-      do  {
-        drawSettime();
-      } while( u8g.nextPage() ); 
-    }
-    
-    // update menu
-    updateSettime();
+    animationLoop(drawSettime, updateSettime);
   }
   else if (mode_current == MODE_SETSOUND) {
-    // animation loop
-    animation_progress = 0;
-    while (checkAnimationRequired()) {      
-      // picture loop
-      u8g.firstPage();
-      do  {
-        drawSetsound();
-      } while( u8g.nextPage() ); 
-    }
-    
-    // update menu
-    updateSetsound();
+    animationLoop(drawSetsound, updateSetsound);
   }
   else {
     if ( last_time < now() ) {
@@ -114,7 +87,7 @@ void loop(void) {
           drawWatch();
         } while( u8g.nextPage() );
       }
-      
+
       last_time = now();
       animation_progress = 0;
       animation_required = true;
