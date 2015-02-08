@@ -1,6 +1,6 @@
-#define SETTINGS_ITEMS 3
-char *settings_items[SETTINGS_ITEMS] = { "Date&Time", "Sound", "Back"};
-const uint8_t *settings_icons[SETTINGS_ITEMS] = {clock_bitmap, musical_note_bitmap, action_undo_note_bitmap};
+#define SETTINGS_ITEMS 4
+char *settings_items[SETTINGS_ITEMS] = { "Date&Time", "Display", "Sound", "Back"};
+const uint8_t *settings_icons[SETTINGS_ITEMS] = {clock_bitmap, monitor_bitmap, musical_note_bitmap, action_undo_note_bitmap};
 
 uint8_t settings_current = 0;
 uint8_t settings_prev = -1;
@@ -11,8 +11,9 @@ void drawSettings(void) {
   // draw icon (32 x 32 pixel)
   int aoffset = (ANIMATION_MAXSTEP - animation_progress) * (64 / ANIMATION_MAXSTEP) * (settings_current - settings_prev);
   for (int i=0;i<SETTINGS_ITEMS;i++) {
-    int offset = (i - settings_current) * 64 + aoffset;
-    u8g.drawBitmapP(48 + offset, 14, 4, 32, settings_icons[i]);
+    int x = 48 + (i - settings_current) * 64 + aoffset;
+    if (x < 128)
+      u8g.drawBitmapP(x, 14, 4, 32, settings_icons[i]);
   }
 
 }
@@ -50,10 +51,13 @@ void updateSettings(void) {
           mode_current = MODE_SETTIME;
       } 
       else if (settings_current == 1) {
+          mode_current = MODE_SETDISPLAY;
+      } 
+      else if (settings_current == 2) {
           initSetsound();
           mode_current = MODE_SETSOUND;
       } 
-      else if (settings_current == 2) {
+      else if (settings_current == 3) {
         //  Back
         settings_current = 0;
         settings_prev = -1;

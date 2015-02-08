@@ -5,13 +5,13 @@
 // devices with all constructor calls is here: http://code.google.com/p/u8glib/wiki/device
 U8GLIB_MINI12864 u8g(9, 10, 13, 11, 12);
 
-// setting for buzzer
+// settings for buzzer
 #define BUZZER_PIN 5                           // pin for buzzer (need pwm)
 #define BUZZER_DELAY 15                        // millisec
 const int buzzer_volumes[4] = { 0, 1, 5, 10 };  // 4 steps volume (0=silence, 1024=max)
 int buzzer_volume = 1;                         // initial volume step
 
-// setting for animation
+// settings for animation
 #define ANIMATION_STEP 2      // animation smoothness (1=smooth, 10=no animation)
 #define ANIMATION_MAXSTEP 10  // animation max step
 
@@ -22,25 +22,28 @@ uint8_t animation_progress = 0;    // animation progress (0=start, 10=end)
 // variables for transition
 boolean transition_required = true;
 
+// variables for display
+const int display_contrasts[4] = { 125, 150, 175, 200 };  // 4 steps contrast
+int display_contrast = 1;
+boolean display_flip = false;
+
 // variables for watch
 time_t last_time;
 
 // mode
-#define MODE_TIME 0      // Watch
-#define MODE_MENU 1      // Menu
-#define MODE_SETTINGS 2  // Settings
-#define MODE_SETTIME 3   // Date&Time
-#define MODE_SETSOUND 4  // Date&Time
-#define MODE_STOPWATCH 5 // Stopwatch
+#define MODE_TIME 0        // Watch
+#define MODE_MENU 1        // Menu
+#define MODE_SETTINGS 2    // Settings
+#define MODE_SETTIME 3     // Date&Time
+#define MODE_SETSOUND 4    // Sound
+#define MODE_STOPWATCH 5   // Stopwatch
+#define MODE_SETDISPLAY 6  // Display
 uint8_t mode_current = MODE_MENU;
 uint8_t mode_prev = MODE_MENU;
 
 void setup(void) {
-  // flip screen, if required
-  // u8g.setRot180();
-  
-  // set contrast, if required
-  //u8g.setContrast(0);
+    // set contrast
+  u8g.setContrast(display_contrasts[display_contrast]);
   
   setTime(0, 0, 0, 1, 1, 2015);
   last_time = now();
@@ -74,6 +77,9 @@ void loop(void) {
   }
   else if (mode_current == MODE_SETTIME) {
     animationLoop(drawSettime, updateSettime);
+  }
+  else if (mode_current == MODE_SETDISPLAY) {
+    animationLoop(drawSetdisplay, updateSetdisplay);
   }
   else if (mode_current == MODE_SETSOUND) {
     animationLoop(drawSetsound, updateSetsound);
