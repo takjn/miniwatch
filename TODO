@@ -8,14 +8,13 @@ TODO:
 [ ]add stopwatch mode
 [ ]stop animation when select key pushed
 [ ]add count down timer
-[ ]add rtc module
 [ ]OLED support
 [ ]8MHz 3.3v support
-[ ]add power saving mode
-[ ]add set sleep interval
 [ ]measuing battery voltage
 [ ]add spotlight mode (noting to do but just light on)
 [ ]add animation settings
+[ ]add rtc module
+[ ]add power saving mode
 
 Future plan:
 [ ]write documents(README.md, etc..)

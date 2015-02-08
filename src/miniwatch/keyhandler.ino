@@ -11,22 +11,18 @@ uint8_t last_key_code = KEY_NONE;
 
 void keySetup(void) {
   // configure input keys 
-  
-  pinMode(KEY_PREV, INPUT);           // set pin to input
-  digitalWrite(KEY_PREV, HIGH);       // turn on pullup resistors
-  pinMode(KEY_NEXT, INPUT);           // set pin to input
-  digitalWrite(KEY_NEXT, HIGH);       // turn on pullup resistors
-  pinMode(KEY_SELECT, INPUT);           // set pin to input
-  digitalWrite(KEY_SELECT, HIGH);       // turn on pullup resistors
+  pinMode(KEY_PIN_PREV, INPUT);           // set pin to input
+  pinMode(KEY_PIN_NEXT, INPUT);           // set pin to input
+  pinMode(KEY_PIN_SELECT, INPUT);         // set pin to input
 }
 
 void getKeyPress(void) {
   uiKeyCodeSecond = uiKeyCodeFirst;
-  if ( digitalRead(KEY_PREV) == LOW )
+  if ( digitalRead(KEY_PIN_PREV) == HIGH )
     uiKeyCodeFirst = KEY_PREV;
-  else if ( digitalRead(KEY_NEXT) == LOW )
+  else if ( digitalRead(KEY_PIN_NEXT) == HIGH )
     uiKeyCodeFirst = KEY_NEXT;
-  else if ( digitalRead(KEY_SELECT) == LOW )
+  else if ( digitalRead(KEY_PIN_SELECT) == HIGH )
     uiKeyCodeFirst = KEY_SELECT;
   else 
     uiKeyCodeFirst = KEY_NONE;
@@ -35,9 +31,14 @@ void getKeyPress(void) {
     uiKeyCode = uiKeyCodeFirst;
     
     // buzzer
-    if ( uiKeyCode != KEY_NONE && last_key_code != uiKeyCode && mode_current != MODE_SETSOUND) {
-      beep();
+    if ( uiKeyCode != KEY_NONE && last_key_code != uiKeyCode) {
+      // for power saving
+      last_millis = millis();
+      powerstate = 0;
+      if (mode_current != MODE_SETSOUND)
+        beep();
     }
+    
   }
   else {
     uiKeyCode = KEY_NONE;

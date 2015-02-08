@@ -23,6 +23,45 @@ boolean checkTransitionRequired(void) {
   return transition_required;
 }
 
+void checkPowerDownRequired(void) {
+  unsigned long  duration = millis() - last_millis;
+  if (power_sleepdelay > 0 && duration > power_sleepdelay) {
+    powerstate = 2;
+    
+    // sleep
+    u8g.firstPage();
+    do  {
+      // clear screen
+    } while( u8g.nextPage() ); 
+    u8g.sleepOn();    
+    attachInterrupt(0,wakeup,FALLING);
+    noInterrupts();
+    set_sleep_mode(SLEEP_MODE_PWR_DOWN);
+    sleep_enable();
+    interrupts();
+    sleep_cpu();
+    
+    // resume
+    sleep_disable();
+    detachInterrupt(0);
+    u8g.sleepOff();
+  }
+  else if (power_lcdoffdelays[power_lcdoffdelay] > 0 && duration > power_lcdoffdelays[power_lcdoffdelay]) {
+    powerstate = 1;
+    analogWrite(DISPLAY_BACKLIGHT_PIN, 0);
+  }
+  else {
+    // set lcd backlight
+    analogWrite(DISPLAY_BACKLIGHT_PIN, display_brightnesses[display_brightness]);
+  }
+}
+
+void wakeup() {
+  last_millis = millis();
+  powerstate = 0;
+  animation_required = true;
+}
+
 void drawFrame(char *title, char *item) {
   
   int header_offset = 0;

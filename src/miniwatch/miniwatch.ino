@@ -1,3 +1,4 @@
+#include <avr/sleep.h>
 #include <Time.h>
 #include "U8glib.h"
 
@@ -6,11 +7,13 @@
 U8GLIB_MINI12864 u8g(9, 10, 13, 11, 12);
 
 // settings for I/O pins
+// *key pins are high input. (on -> 5v/3.3v, off -> GND)
+// *so key pins need to be connected to GND with pull down resistors (10kohm) 
 #define BUZZER_PIN 5              // pin for buzzer (need pwm)
 #define DISPLAY_BACKLIGHT_PIN  6  // pin for lcd backlight (need pwm)
-#define KEY_PREV 4;               // pin for previous key
-#define KEY_NEXT 2;               // pin for next key
-#define KEY_SELECT 3;             // pin for select key
+#define KEY_PIN_PREV 4            // pin for previous button
+#define KEY_PIN_NEXT 3            // pin for next button
+#define KEY_PIN_SELECT 2          // pin for select button
 
 // settings for buzzer
 #define BUZZER_DELAY 15                        // millisec
@@ -38,6 +41,14 @@ int display_brightness = 3;
 // variables for watch
 time_t last_time;
 
+// settings for power saving
+//const unsigned long power_sleepdelay = 600000;  // powerdown (millisec, 0=never powerdown)
+const unsigned long power_sleepdelay = 0;  // powerdown (millisec, 0=never powerdown)
+const unsigned long power_lcdoffdelays[4] = {0, 5000, 10000, 30000};  // lcd off (millisec, 0=always on)
+int power_lcdoffdelay = 0;
+unsigned long last_millis = 0;  // mills for power save mode
+int powerstate = 0;  // (0=normal, 1=backlight off, 2=powerdown)
+
 // mode
 #define MODE_TIME 0        // Watch
 #define MODE_MENU 1        // Menu
@@ -53,11 +64,9 @@ void setup(void) {
   // set contrast
   u8g.setContrast(display_contrasts[display_contrast]);
   
-  // set lcd backlight
-  analogWrite(DISPLAY_BACKLIGHT_PIN, display_brightnesses[display_brightness]);
-  
   setTime(0, 0, 0, 1, 1, 2015);
   last_time = now();
+  last_millis = millis();
 
   keySetup();  // setup key detection and debounce algorithm
 }
@@ -114,8 +123,11 @@ void loop(void) {
     updateWatch();
   }
   
-  //  check transition
+  // check transition
   checkTransitionRequired();
+  
+  // check power down
+  checkPowerDownRequired();
   
   delay(10);
 }

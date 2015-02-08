@@ -1,5 +1,5 @@
-#define SETDISPLAY_ITEMS 4
-char *setdisplay_items[SETDISPLAY_ITEMS] = { "Brightness", "Contrast", "Flip", "Back"};
+#define SETDISPLAY_ITEMS 5
+char *setdisplay_items[SETDISPLAY_ITEMS] = { "Brightness", "Contrast", "Screen off sec", "Flip", "Back"};
 
 uint8_t setdisplay_current = 0;
 uint8_t setdisplay_prev = -1;
@@ -16,7 +16,7 @@ void drawSetdisplay(void) {
     u8g.setFontPosCenter();
     
     char buffer[4];
-    if (i < 3) {
+    if (i < 4) {
       if (i == 0) {
         sprintf(buffer, "%03d", display_brightnesses[display_brightness]);
       }
@@ -24,6 +24,9 @@ void drawSetdisplay(void) {
         sprintf(buffer, "%03d", display_contrasts[display_contrast]);
       }
       else if (i == 2) {
+        sprintf(buffer, "%03d", (power_lcdoffdelays[power_lcdoffdelay] / 1000));
+      }
+      else if (i == 3) {
         if (display_flip) {
           sprintf(buffer, "%s", "YES");
         }
@@ -37,7 +40,9 @@ void drawSetdisplay(void) {
       u8g.undoScale();
     }
     else {
-      u8g.drawBitmapP((24 + offset) * 2, 14, 4, 32, action_undo_note_bitmap);
+      int x = (24 + offset) * 2;
+      if (x < 128 && x > -64)
+        u8g.drawBitmapP(x, 14, 4, 32, action_undo_note_bitmap);
     }
   }
   
@@ -83,13 +88,18 @@ void updateSetdisplay(void) {
         u8g.setContrast(display_contrasts[display_contrast]);
       }
       else if (setdisplay_current == 2) {
+        power_lcdoffdelay++;
+        if (power_lcdoffdelay > 3)
+          power_lcdoffdelay = 0;
+      }
+      else if (setdisplay_current == 3) {
         display_flip = !display_flip;
         if (display_flip)
           u8g.setRot180();
         else
           u8g.undoRotation();
       }
-      else if (setdisplay_current == 3) {
+      else if (setdisplay_current == 4) {
         //  Back
         setdisplay_current = 0;
         setdisplay_prev = -1;
