@@ -1,6 +1,6 @@
 #define SETTINGS_ITEMS 4
-char *settings_items[SETTINGS_ITEMS] = { "Date&Time", "Display", "Sound", "Back"};
-const uint8_t *settings_icons[SETTINGS_ITEMS] = {clock_bitmap, monitor_bitmap, musical_note_bitmap, action_undo_note_bitmap};
+char *settings_items[SETTINGS_ITEMS] = { "Display", "Sound", "Date&Time", "Back"};
+const uint8_t *settings_icons[SETTINGS_ITEMS] = {monitor_bitmap, musical_note_bitmap, clock_bitmap, action_undo_note_bitmap};
 
 uint8_t settings_current = 0;
 uint8_t settings_prev = -1;
@@ -47,15 +47,15 @@ void updateSettings(void) {
       break;
     case KEY_SELECT:
       if (settings_current == 0) {
-          initSettime();
-          mode_current = MODE_SETTIME;
-      } 
-      else if (settings_current == 1) {
           mode_current = MODE_SETDISPLAY;
       } 
-      else if (settings_current == 2) {
+      else if (settings_current == 1) {
           initSetsound();
           mode_current = MODE_SETSOUND;
+      } 
+      else if (settings_current == 2) {
+          initSettime();
+          mode_current = MODE_SETTIME;
       } 
       else if (settings_current == 3) {
         //  Back

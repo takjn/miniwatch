@@ -104,19 +104,44 @@ void loop(void) {
   else if (mode_current == MODE_SETSOUND) {
     animationLoop(drawSetsound, updateSetsound);
   }
-  else {
-    if ( last_time < now() ) {
+  else if (mode_current == MODE_STOPWATCH) {
+    if (animation_required) {
       while (checkAnimationRequired()) {      
-        // picture loop
         u8g.firstPage(); 
         do {
-          drawWatch();
+          drawStopwatch();
         } while( u8g.nextPage() );
+      }
+    }
+    else {
+        u8g.firstPage(); 
+        do {
+          drawStopwatch();
+        } while( u8g.nextPage() );
+    }
+    
+    updateStopwatch();
+  }
+  else {
+    if ( last_time < now() ) {
+      if (animation_required) {
+        while (checkAnimationRequired()) {      
+          u8g.firstPage(); 
+          do {
+            drawWatch();
+          } while( u8g.nextPage() );
+        }
+      }
+      else {
+          u8g.firstPage(); 
+          do {
+            drawWatch();
+          } while( u8g.nextPage() );
       }
 
       last_time = now();
-      animation_progress = 0;
-      animation_required = true;
+//      animation_progress = 0;
+//      animation_required = true;
     }
     
     // show main menu 

@@ -1,5 +1,5 @@
 #define SETDISPLAY_ITEMS 5
-char *setdisplay_items[SETDISPLAY_ITEMS] = { "Brightness", "Contrast", "Screen off sec", "Flip", "Back"};
+char *setdisplay_items[SETDISPLAY_ITEMS] = { "Brightness", "Contrast", "Screen off", "Flip", "Back"};
 
 uint8_t setdisplay_current = 0;
 uint8_t setdisplay_prev = -1;
@@ -24,7 +24,10 @@ void drawSetdisplay(void) {
         sprintf(buffer, "%03d", display_contrasts[display_contrast]);
       }
       else if (i == 2) {
-        sprintf(buffer, "%03d", (power_lcdoffdelays[power_lcdoffdelay] / 1000));
+        if (power_lcdoffdelays[power_lcdoffdelay] > 0)
+          sprintf(buffer, "%03d", (power_lcdoffdelays[power_lcdoffdelay] / 1000));
+        else
+          sprintf(buffer, "%s", "NO");
       }
       else if (i == 3) {
         if (display_flip) {
