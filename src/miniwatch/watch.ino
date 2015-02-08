@@ -1,3 +1,5 @@
+int lastsec = 0;
+boolean tic = false;
 
 void drawWatch(void) {
   char buffer[20];
@@ -6,7 +8,6 @@ void drawWatch(void) {
   if (transition_required) {
     header_offset = (ANIMATION_MAXSTEP - animation_progress);
   }
-
   
   String s = dayShortStr(weekday());
   s += " ";
@@ -29,7 +30,11 @@ void drawWatch(void) {
 
   u8g.setFont(u8g_font_freedoomr25n);
   u8g.setFontPosTop();
-  sprintf(buffer, "%02d:%02d", hour(), minute());
+  if (tic)
+    sprintf(buffer, "%02d:%02d", hour(), minute());
+  else
+    sprintf(buffer, "%02d %02d", hour(), minute());
+    
   u8g.drawStr(0, 23, buffer); 
 
   u8g.setFont(u8g_font_freedoomr10r);
@@ -48,6 +53,10 @@ void drawWatch(void) {
 
 
 void updateWatch(void) {
+  if (second() != lastsec) {
+    tic = !tic;
+    lastsec = second();
+  }
   if ( uiKeyCode != KEY_NONE && last_key_code == uiKeyCode ) {
     return;
   }

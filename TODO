@@ -2,20 +2,20 @@ TODO:
 [X]add set contrast
 [X]add set rotation
 [X]add display brightness (LCD backlight control)
+[X]key handler refactoring (pin settings)
+[X]add ":" blink (watch mode)
+[X]add clipping
 [ ]add stopwatch mode
 [ ]stop animation when select key pushed
 [ ]add count down timer
 [ ]add rtc module
-[ ]add ":" blink (watch mode)
 [ ]OLED support
 [ ]8MHz 3.3v support
-[ ]key handler refactoring (pin settings)
 [ ]add power saving mode
 [ ]add set sleep interval
 [ ]measuing battery voltage
 [ ]add spotlight mode (noting to do but just light on)
 [ ]add animation settings
-[ ]add clipping
 
 Future plan:
 [ ]write documents(README.md, etc..)

@@ -8,7 +8,9 @@ U8GLIB_MINI12864 u8g(9, 10, 13, 11, 12);
 // settings for I/O pins
 #define BUZZER_PIN 5              // pin for buzzer (need pwm)
 #define DISPLAY_BACKLIGHT_PIN  6  // pin for lcd backlight (need pwm)
-
+#define KEY_PREV 4;               // pin for previous key
+#define KEY_NEXT 2;               // pin for next key
+#define KEY_SELECT 3;             // pin for select key
 
 // settings for buzzer
 #define BUZZER_DELAY 15                        // millisec
@@ -31,7 +33,7 @@ const int display_contrasts[4] = { 125, 150, 175, 200 };  // 4 steps contrast
 int display_contrast = 1;
 boolean display_flip = false;
 const int display_brightnesses[4] = { 0, 100, 150, 200 };   // 4 steps brightness (0=none, 255=max)
-int display_brightness = 2;
+int display_brightness = 3;
 
 // variables for watch
 time_t last_time;
