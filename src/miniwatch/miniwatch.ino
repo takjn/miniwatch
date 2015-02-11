@@ -4,7 +4,11 @@
 
 // U8GLIB constructor
 // devices with all constructor calls is here: http://code.google.com/p/u8glib/wiki/device
-U8GLIB_MINI12864 u8g(9, 10, 13, 11, 12);
+//U8GLIB_MINI12864 u8g(9, 10, 13, 11, 12);
+//U8GLIB_SSD1306_128X64 u8g(13, 11, 10, 9);	// SW SPI Com: SCK = 13, MOSI = 11, CS = 10, A0 = 9
+
+U8GLIB_SSD1306_128X64 u8g(13, 11, 10, 9, 12);	// SW SPI Com: SCK = 13, MOSI = 11, CS = 10, A0 = 9
+
 
 // settings for I/O pins
 #define BUZZER_PIN 5              // pin for buzzer (need pwm)
@@ -30,10 +34,10 @@ uint8_t animation_progress = 0;    // animation progress (0=start, 10=end)
 boolean transition_required = true;
 
 // settings for display
-const int display_contrasts[4] = { 125, 150, 175, 200 };  // 4 steps contrast
+const int display_contrasts[4] = { 150, 175, 200, 255 };  // 4 steps contrast
 int display_contrast = 1;
 boolean display_flip = false;
-const int display_brightnesses[4] = { 0, 100, 150, 200 };   // 4 steps brightness (0=none, 255=max)
+const int display_brightnesses[4] = { 60, 120, 180, 254 };   // 4 steps brightness (0=none, 255=max)
 int display_brightness = 3;
 
 // variables for watch
@@ -43,7 +47,7 @@ time_t last_time;
 //const unsigned long power_sleepdelay = 600000;  // powerdown (millisec, 0=never powerdown)
 unsigned long power_sleepdelay = 0;  // powerdown (millisec, 0=never powerdown)
 const unsigned long power_lcdoffdelays[4] = {0, 5000, 10000, 30000};  // lcd off (millisec, 0=always on)
-int power_lcdoffdelay = 1;
+int power_lcdoffdelay = 0;
 unsigned long last_millis = 0;  // mills for power save mode
 int powerstate = 0;  // (0=normal, 1=backlight off, 2=powerdown)
 
@@ -139,8 +143,6 @@ void loop(void) {
       }
 
       last_time = now();
-//      animation_progress = 0;
-//      animation_required = true;
     }
     
     // show main menu 
