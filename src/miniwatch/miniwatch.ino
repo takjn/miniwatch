@@ -86,6 +86,7 @@ void animationLoop(void (*draw)(void), void (*keyhandler)(void)) {
     keyhandler();
 } 
 
+
 void loop(void) {
   getKeyPress();
   

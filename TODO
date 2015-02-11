@@ -5,16 +5,15 @@ TODO:
 [X]key handler refactoring (pin settings)
 [X]add ":" blink (watch mode)
 [X]add clipping
-[ ]add stopwatch mode
-[ ]stop animation when select key pushed
-[ ]add count down timer
+[X]add stopwatch mode
 [ ]OLED support
 [ ]8MHz 3.3v support
 [ ]measuing battery voltage
 [ ]add spotlight mode (noting to do but just light on)
-[ ]add animation settings
 [ ]add rtc module
 [ ]add power saving mode
+[ ]add alerm
+[ ]add count down timer
 
 Future plan:
 [ ]write documents(README.md, etc..)
@@ -22,3 +21,8 @@ Future plan:
 [ ]make a custom hardware
 [ ]Some sensor support (temp, accel, etc..)
 [ ]OBD2 support and show car info
+
+Some ideas:
+[ ]change transition effect
+[ ]add effect for entering power saving mode
+[ ]add animation settings

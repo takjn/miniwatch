@@ -48,6 +48,15 @@ void drawWatch(void) {
   u8g.drawFrame(0, 56 + header_offset,16, 8 + header_offset);
   u8g.drawBox(2, 58 + header_offset,12, 4 + header_offset);
   u8g.drawLine(16, 58 + header_offset,16, 61 + header_offset);
+
+  float vcc = cpuVcc();
+  dtostrf(vcc, 5, 1, buffer);
+
+  u8g.setFont(u8g_font_04b_03br);
+  u8g.setFontPosBottom();
+  u8g.setScale2x2();
+  u8g.drawStr(32, 32, buffer); 
+  u8g.undoScale();
   
 }
 
