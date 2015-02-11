@@ -5,17 +5,8 @@ unsigned long stopwatch_duration = 0;
 void drawStopwatch(void) {
   char buffer[20];
   
-  int header_offset = 0;
-  if (transition_required) {
-    header_offset = (ANIMATION_MAXSTEP - animation_progress);
-  }
-  
-  u8g.setFont(u8g_font_04b_03br);
-  u8g.setFontPosTop();
-  u8g.setScale2x2();
-  u8g.drawStr(0, 0 - header_offset, "STOPWATCH"); 
-  u8g.undoScale();
-  
+  drawWatchFrame("STOPWATCH");
+
   if (stopwatch_started) {
     stopwatch_duration = millis() - stopwatch_startmillis;
   }

@@ -48,6 +48,7 @@ void checkPowerDownRequired(void) {
   }
   else if (power_lcdoffdelays[power_lcdoffdelay] > 0 && duration > power_lcdoffdelays[power_lcdoffdelay]) {
     powerstate = 1;
+    u8g.sleepOn();    
     analogWrite(DISPLAY_BACKLIGHT_PIN, 0);
   }
   else {
@@ -97,5 +98,29 @@ void drawFrame(char *title, char *item) {
   u8g.drawLine(44, 22, 46, 22);
   
   u8g.undoScale();
+}
+
+void drawWatchFrame(char *title) {
+  
+  // header
+  int header_offset = 0;
+  if (transition_required) {
+    header_offset = (ANIMATION_MAXSTEP - animation_progress);
+  }
+  
+  u8g.setFont(u8g_font_04b_03br);
+  u8g.setFontPosTop();
+  u8g.setScale2x2();
+  u8g.drawStr(0, 0 - header_offset, title); 
+  u8g.undoScale();
+
+  // battery status
+  int remain = 10 - ( (power_voltage_max - cpuVcc()) / power_voltage_drop * 10);
+  u8g.drawFrame(0, 56 + header_offset,16, 8 + header_offset);
+  if (remain > 0) {
+    u8g.drawBox(2, 58 + header_offset, 2 + remain , 4 + header_offset);
+  }
+  u8g.drawLine(16, 58 + header_offset,16, 61 + header_offset);
+  
 }
 

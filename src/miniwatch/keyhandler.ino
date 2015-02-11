@@ -35,6 +35,7 @@ void getKeyPress(void) {
       // for power saving
       last_millis = millis();
       powerstate = 0;
+      u8g.sleepOff();
       if (mode_current != MODE_SETSOUND)
         beep();
     }

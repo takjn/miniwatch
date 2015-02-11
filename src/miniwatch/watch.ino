@@ -4,11 +4,6 @@ boolean tic = false;
 void drawWatch(void) {
   char buffer[20];
   
-  int header_offset = 0;
-  if (transition_required) {
-    header_offset = (ANIMATION_MAXSTEP - animation_progress);
-  }
-  
   String s = dayShortStr(weekday());
   s += " ";
   if (day()<10) {
@@ -21,13 +16,8 @@ void drawWatch(void) {
 //  s += year();
   s.toCharArray(buffer, 20);
   
-  u8g.setFont(u8g_font_04b_03br);
-  u8g.setFontPosTop();
-  u8g.setScale2x2();
-  u8g.drawStr(0, 0 - header_offset, buffer); 
-  u8g.undoScale();
-
-
+  drawWatchFrame(buffer);
+  
   u8g.setFont(u8g_font_freedoomr25n);
   u8g.setFontPosTop();
   if (tic)
@@ -42,20 +32,6 @@ void drawWatch(void) {
   u8g.setScale2x2();
   sprintf(buffer, "%02d", second());
   u8g.drawStr(47, 12, buffer);
-  u8g.undoScale();
-  
-  // battery status
-  u8g.drawFrame(0, 56 + header_offset,16, 8 + header_offset);
-  u8g.drawBox(2, 58 + header_offset,12, 4 + header_offset);
-  u8g.drawLine(16, 58 + header_offset,16, 61 + header_offset);
-
-  float vcc = cpuVcc();
-  dtostrf(vcc, 5, 1, buffer);
-
-  u8g.setFont(u8g_font_04b_03br);
-  u8g.setFontPosBottom();
-  u8g.setScale2x2();
-  u8g.drawStr(32, 32, buffer); 
   u8g.undoScale();
   
 }
