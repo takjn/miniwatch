@@ -34,7 +34,7 @@ void checkPowerDownRequired(void) {
       // clear screen
     } while( u8g.nextPage() ); 
     u8g.sleepOn();    
-    attachInterrupt(0,wakeup,FALLING);
+    attachInterrupt(1,wakeup,FALLING);
     noInterrupts();
     set_sleep_mode(SLEEP_MODE_PWR_DOWN);
     sleep_enable();
@@ -43,7 +43,7 @@ void checkPowerDownRequired(void) {
     
     // resume
     sleep_disable();
-    detachInterrupt(0);
+    detachInterrupt(1);
     u8g.sleepOff();
   }
   else if (power_lcdoffdelays[power_lcdoffdelay] > 0 && duration > power_lcdoffdelays[power_lcdoffdelay]) {

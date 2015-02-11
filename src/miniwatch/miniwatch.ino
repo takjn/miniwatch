@@ -7,8 +7,6 @@
 U8GLIB_MINI12864 u8g(9, 10, 13, 11, 12);
 
 // settings for I/O pins
-// *key pins are high input. (on -> 5v/3.3v, off -> GND)
-// *so key pins need to be connected to GND with pull down resistors (10kohm) 
 #define BUZZER_PIN 5              // pin for buzzer (need pwm)
 #define DISPLAY_BACKLIGHT_PIN  6  // pin for lcd backlight (need pwm)
 #define KEY_PIN_PREV 4            // pin for previous button
@@ -43,9 +41,9 @@ time_t last_time;
 
 // settings for power saving
 //const unsigned long power_sleepdelay = 600000;  // powerdown (millisec, 0=never powerdown)
-const unsigned long power_sleepdelay = 0;  // powerdown (millisec, 0=never powerdown)
+unsigned long power_sleepdelay = 0;  // powerdown (millisec, 0=never powerdown)
 const unsigned long power_lcdoffdelays[4] = {0, 5000, 10000, 30000};  // lcd off (millisec, 0=always on)
-int power_lcdoffdelay = 0;
+int power_lcdoffdelay = 1;
 unsigned long last_millis = 0;  // mills for power save mode
 int powerstate = 0;  // (0=normal, 1=backlight off, 2=powerdown)
 
