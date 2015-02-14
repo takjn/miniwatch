@@ -27,10 +27,6 @@ void drawStopwatch(void) {
   u8g.drawStr(0, 12, buffer);
   u8g.undoScale();
   
-  // battery status
-  u8g.drawFrame(0, 56 + header_offset,16, 8 + header_offset);
-  u8g.drawBox(2, 58 + header_offset,12, 4 + header_offset);
-  u8g.drawLine(16, 58 + header_offset,16, 61 + header_offset);
 }
 
 void updateStopwatch(void) {

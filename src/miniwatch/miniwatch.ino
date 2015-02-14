@@ -5,7 +5,8 @@
 // U8GLIB constructor
 // devices with all constructor calls is here: http://code.google.com/p/u8glib/wiki/device
 //U8GLIB_SSD1306_128X64 u8g(13, 11, 10, 9, 12);	// SW SPI Com: SCK = 13, MOSI = 11, CS = 10, A0 = 9, RST = 12
-U8GLIB_SSD1306_128X64 u8g(10, 9, 12);		// HW SPI Com: CS = 10, A0 = 9, RST = 12 (Hardware Pins are  SCK = 13 and MOSI = 11)
+//U8GLIB_SSD1306_128X64 u8g(10, 9, 12);		// HW SPI Com: CS = 10, A0 = 9, RST = 12 (Hardware Pins are  SCK = 13 and MOSI = 11)
+U8GLIB_MINI12864 u8g(13, 11, 10, 9 ,12);
 
 // settings for I/O pins
 #define BUZZER_PIN 5              // pin for buzzer (need pwm)
