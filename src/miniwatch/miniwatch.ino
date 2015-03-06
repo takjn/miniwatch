@@ -6,14 +6,20 @@
 // devices with all constructor calls is here: http://code.google.com/p/u8glib/wiki/device
 //U8GLIB_SSD1306_128X64 u8g(13, 11, 10, 9, 12);	// SW SPI Com: SCK = 13, MOSI = 11, CS = 10, A0 = 9, RST = 12
 //U8GLIB_SSD1306_128X64 u8g(10, 9, 12);		// HW SPI Com: CS = 10, A0 = 9, RST = 12 (Hardware Pins are  SCK = 13 and MOSI = 11)
-U8GLIB_MINI12864 u8g(13, 11, 10, 9 ,12);
+//U8GLIB_MINI12864 u8g(13, 11, 10, 9 ,12);
+U8GLIB_MINI12864 u8g(10, 14 ,12);
 
 // settings for I/O pins
 #define BUZZER_PIN 5              // pin for buzzer (need pwm)
-#define DISPLAY_BACKLIGHT_PIN  6  // pin for lcd backlight (need pwm)
+#define DISPLAY_BACKLIGHT_PIN 6   // pin for lcd backlight (need pwm)
 #define KEY_PIN_PREV 4            // pin for previous button
 #define KEY_PIN_NEXT 3            // pin for next button
 #define KEY_PIN_SELECT 2          // pin for select button
+
+#define RTC4534_SCK 15            // pin for RTC4534 SCK
+#define RTC4534_DATA 16           // pin for RTC4534 DATA
+#define RTC4534_RW 17             // pin for RTC4534 RW
+#define RTC4534_CE 9              // pin for RTC4534 CE
 
 // settings for buzzer
 #define BUZZER_DELAY 15                        // millisec
@@ -61,11 +67,32 @@ int powerstate = 0;  // (0=normal, 1=backlight off, 2=powerdown)
 uint8_t mode_current = MODE_MENU;
 uint8_t mode_prev = MODE_MENU;
 
+// 日時変数(読み出し用)
+byte dSec;
+byte dMin;
+byte dHour;
+byte dWeek;
+byte dDay;
+byte dMon;
+byte dYear;
+
+// 日時変数(書き込み用)
+byte sSec;
+byte sMin;
+byte sHour;
+byte sWeek;
+byte sDay;
+byte sMon;
+byte sYear;
+
 void setup(void) {
+  Serial.begin(19200);    // シリアル初期化
+  
   // set contrast
   u8g.setContrast(display_contrasts[display_contrast]);
   
-  setTime(0, 0, 0, 1, 1, 2015);
+  // setup rtc4534
+  setupRtc();
   last_time = now();
   last_millis = millis();
 
@@ -126,6 +153,7 @@ void loop(void) {
   }
   else {
     if ( last_time < now() ) {
+      setTimeFromRtc();
       if (animation_required) {
         while (checkAnimationRequired()) {      
           u8g.firstPage(); 
