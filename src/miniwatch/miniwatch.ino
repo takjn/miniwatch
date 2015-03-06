@@ -18,7 +18,7 @@ U8GLIB_MINI12864 u8g(10, 14 ,12);
 
 #define RTC4534_SCK 15            // pin for RTC4534 SCK
 #define RTC4534_DATA 16           // pin for RTC4534 DATA
-#define RTC4534_RW 17             // pin for RTC4534 RW
+#define RTC4534_WR 17             // pin for RTC4534 RW
 #define RTC4534_CE 9              // pin for RTC4534 CE
 
 // settings for buzzer
@@ -64,26 +64,8 @@ int powerstate = 0;  // (0=normal, 1=backlight off, 2=powerdown)
 #define MODE_SETSOUND 4    // Sound
 #define MODE_STOPWATCH 5   // Stopwatch
 #define MODE_SETDISPLAY 6  // Display
-uint8_t mode_current = MODE_MENU;
-uint8_t mode_prev = MODE_MENU;
-
-// 日時変数(読み出し用)
-byte dSec;
-byte dMin;
-byte dHour;
-byte dWeek;
-byte dDay;
-byte dMon;
-byte dYear;
-
-// 日時変数(書き込み用)
-byte sSec;
-byte sMin;
-byte sHour;
-byte sWeek;
-byte sDay;
-byte sMon;
-byte sYear;
+uint8_t mode_current = MODE_TIME;
+uint8_t mode_prev = MODE_TIME;
 
 void setup(void) {
   Serial.begin(19200);    // シリアル初期化
