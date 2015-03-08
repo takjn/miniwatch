@@ -13,8 +13,8 @@ U8GLIB_MINI12864 u8g(10, 14 ,12);
 #define BUZZER_PIN 5              // pin for buzzer (need pwm)
 #define DISPLAY_BACKLIGHT_PIN 6   // pin for lcd backlight (need pwm)
 #define KEY_PIN_PREV 4            // pin for previous button
-#define KEY_PIN_NEXT 3            // pin for next button
-#define KEY_PIN_SELECT 2          // pin for select button
+#define KEY_PIN_NEXT 2            // pin for next button
+#define KEY_PIN_SELECT 3          // pin for select button
 
 #define RTC4534_SCK 15            // pin for RTC4534 SCK
 #define RTC4534_DATA 16           // pin for RTC4534 DATA
@@ -28,7 +28,7 @@ int buzzer_volume = 1;                         // initial volume step
 
 // settings for animation
 #define ANIMATION_STEP 2      // animation smoothness (1=smooth, 10=no animation)
-#define ANIMATION_MAXSTEP 10  // animation max step
+#define ANIMATION_MAXSTEP 8  // animation max step
 
 // variables for animation
 boolean animation_required = true;
@@ -50,9 +50,9 @@ time_t last_time;
 // settings for power saving
 const float power_voltage_max = 3.0;
 const float power_voltage_drop = 0.5;
-unsigned long power_sleepdelay = 0;  // powerdown (millisec, 0=never powerdown)
+#define power_sleepdelay power_lcdoffdelays[power_lcdoffdelay] * 2    // powerdown (millisec, 0=never powerdown)
 const unsigned long power_lcdoffdelays[4] = {0, 5000, 10000, 30000};  // lcd off (millisec, 0=always on)
-int power_lcdoffdelay = 0;
+int power_lcdoffdelay = 1;
 unsigned long last_millis = 0;  // mills for power save mode
 int powerstate = 0;  // (0=normal, 1=backlight off, 2=powerdown)
 
@@ -68,7 +68,7 @@ uint8_t mode_current = MODE_TIME;
 uint8_t mode_prev = MODE_TIME;
 
 void setup(void) {
-  Serial.begin(19200);    // シリアル初期化
+//  Serial.begin(19200);
   
   // set contrast
   u8g.setContrast(display_contrasts[display_contrast]);

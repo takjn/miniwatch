@@ -129,6 +129,7 @@ void updateSettime(void) {
       else if (settime_current == 5) {
         // Save
         setTime(hh, mi, 0, dd, mm, yy);
+        setRTC(yy, mm, dd, 0, hh, mi, 0);
         settime_current = 0;
         settime_prev = -1;
         mode_current = MODE_SETTINGS;

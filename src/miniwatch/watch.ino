@@ -1,5 +1,5 @@
 int lastsec = 0;
-boolean tic = false;
+//boolean tic = false;
 
 void drawWatch(void) {
   char buffer[20];
@@ -12,18 +12,19 @@ void drawWatch(void) {
   s += day();
   s += " ";
   s += monthShortStr(month());
-//  s += " ";
-//  s += year();
+  s += " ";
+  s += (year()-2000);
   s.toCharArray(buffer, 20);
   
   drawWatchFrame(buffer);
   
   u8g.setFont(u8g_font_freedoomr25n);
   u8g.setFontPosTop();
-  if (tic)
-    sprintf(buffer, "%02d:%02d", hour(), minute());
-  else
-    sprintf(buffer, "%02d %02d", hour(), minute());
+  sprintf(buffer, "%02d:%02d", hour(), minute());
+//  if (tic)
+//    sprintf(buffer, "%02d:%02d", hour(), minute());
+//  else
+//    sprintf(buffer, "%02d %02d", hour(), minute());
     
   u8g.drawStr(0, 23, buffer); 
 
@@ -39,7 +40,7 @@ void drawWatch(void) {
 
 void updateWatch(void) {
   if (second() != lastsec) {
-    tic = !tic;
+//    tic = !tic;
     lastsec = second();
   }
   if ( uiKeyCode != KEY_NONE && last_key_code == uiKeyCode ) {
