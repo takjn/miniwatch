@@ -4,7 +4,7 @@ void beep(void) {
     analogWrite(BUZZER_PIN, 0);
 }
 
-boolean checkAnimationRequired(void) {
+inline boolean checkAnimationRequired(void) {
   animation_progress += ANIMATION_STEP;
   if (animation_progress > ANIMATION_MAXSTEP) {
     animation_required = false;
@@ -33,7 +33,8 @@ void checkPowerDownRequired(void) {
     do  {
       // clear screen
     } while( u8g.nextPage() ); 
-    u8g.sleepOn();    
+    u8g.setContrast(0);
+    u8g.sleepOn();
     attachInterrupt(1,wakeup,FALLING);
     noInterrupts();
     set_sleep_mode(SLEEP_MODE_PWR_DOWN);
@@ -45,6 +46,7 @@ void checkPowerDownRequired(void) {
     sleep_disable();
     detachInterrupt(1);
     u8g.sleepOff();
+    u8g.setContrast(display_contrasts[display_contrast]);
   }
   else if (power_lcdoffdelays[power_lcdoffdelay] > 0 && duration > power_lcdoffdelays[power_lcdoffdelay]) {
     powerstate = 1;
@@ -116,6 +118,9 @@ void drawWatchFrame(char *title) {
 
   // battery status
   int remain = 10 - ( (power_voltage_max - cpuVcc()) / power_voltage_drop * 10);
+  if (remain > 10) {
+    remain = 10;
+  }
   u8g.drawFrame(0, 56 + header_offset,16, 8 + header_offset);
   if (remain > 0) {
     u8g.drawBox(2, 58 + header_offset, 2 + remain , 4 + header_offset);

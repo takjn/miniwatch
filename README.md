@@ -1,2 +1,2 @@
 # miniwatch
-Aruduino Watch Project
+Arduino Watch Project

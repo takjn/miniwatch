@@ -2,6 +2,7 @@
 #include <Time.h>
 #include "U8glib.h"
 
+
 // U8GLIB constructor
 // devices with all constructor calls is here: http://code.google.com/p/u8glib/wiki/device
 //U8GLIB_SSD1306_128X64 u8g(13, 11, 10, 9, 12);	// SW SPI Com: SCK = 13, MOSI = 11, CS = 10, A0 = 9, RST = 12
@@ -164,6 +165,8 @@ void loop(void) {
   // check power down
   checkPowerDownRequired();
   
-  delay(10);
+  if (mode_current != MODE_STOPWATCH) {
+    delay(50);
+  }
 }
 
