@@ -8,14 +8,16 @@
 //U8GLIB_SSD1306_128X64 u8g(13, 11, 10, 9, 12);	// SW SPI Com: SCK = 13, MOSI = 11, CS = 10, A0 = 9, RST = 12
 //U8GLIB_SSD1306_128X64 u8g(10, 9, 12);		// HW SPI Com: CS = 10, A0 = 9, RST = 12 (Hardware Pins are  SCK = 13 and MOSI = 11)
 //U8GLIB_MINI12864 u8g(13, 11, 10, 9 ,12);
-U8GLIB_MINI12864 u8g(10, 14 ,12);
+//U8GLIB_MINI12864 u8g(10, 14 ,12);
+U8GLIB_NHD_C12864 u8g(13, 11, 10, 14, 12);	// SPI Com: SCK = 13, MOSI = 11, CS = 10, A0 = 9, RST = 8
+
 
 // settings for I/O pins
 #define BUZZER_PIN 5              // pin for buzzer (need pwm)
 #define DISPLAY_BACKLIGHT_PIN 6   // pin for lcd backlight (need pwm)
 #define KEY_PIN_PREV 4            // pin for previous button
-#define KEY_PIN_NEXT 2            // pin for next button
-#define KEY_PIN_SELECT 3          // pin for select button
+#define KEY_PIN_NEXT 3            // pin for next button
+#define KEY_PIN_SELECT 2          // pin for select button
 
 #define RTC4534_SCK 15            // pin for RTC4534 SCK
 #define RTC4534_DATA 16           // pin for RTC4534 DATA
@@ -39,11 +41,12 @@ uint8_t animation_progress = 0;    // animation progress (0=start, 10=end)
 boolean transition_required = true;
 
 // settings for display
-const int display_contrasts[4] = { 150, 175, 200, 255 };  // 4 steps contrast
-int display_contrast = 1;
+//const int display_contrasts[4] = { 150, 175, 200, 255 };  // 4 steps contrast
+const int display_contrasts[4] = { 0, 10, 20, 30 };  // 4 steps contrast
+int display_contrast = 0;
 boolean display_flip = false;
-const int display_brightnesses[4] = { 150, 180, 210, 255 };   // 4 steps brightness (0=none, 255=max)
-int display_brightness = 3;
+const int display_brightnesses[4] = { 0, 80, 160, 255 };   // 4 steps brightness (0=none, 255=max)
+int display_brightness = 0;
 
 // variables for watch
 time_t last_time;
@@ -53,7 +56,7 @@ const float power_voltage_max = 3.0;
 const float power_voltage_drop = 0.5;
 #define power_sleepdelay power_lcdoffdelays[power_lcdoffdelay] * 2    // powerdown (millisec, 0=never powerdown)
 const unsigned long power_lcdoffdelays[4] = {0, 5000, 10000, 30000};  // lcd off (millisec, 0=always on)
-int power_lcdoffdelay = 1;
+int power_lcdoffdelay = 0;
 unsigned long last_millis = 0;  // mills for power save mode
 int powerstate = 0;  // (0=normal, 1=backlight off, 2=powerdown)
 
