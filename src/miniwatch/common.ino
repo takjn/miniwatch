@@ -28,12 +28,7 @@ void checkPowerDownRequired(void) {
   if (power_sleepdelay > 0 && duration > power_sleepdelay) {
     powerstate = 2;
     
-    // sleep
-    u8g.firstPage();
-    do  {
-      // clear screen
-    } while( u8g.nextPage() ); 
-    u8g.setContrast(0);
+    // sleep    
     u8g.sleepOn();
     attachInterrupt(1,wakeup,FALLING);
     noInterrupts();
@@ -46,16 +41,17 @@ void checkPowerDownRequired(void) {
     sleep_disable();
     detachInterrupt(1);
     u8g.sleepOff();
-    u8g.setContrast(display_contrasts[display_contrast]);
+//    u8g.setContrast(display_contrasts[display_contrast]);
+//    analogWrite(DISPLAY_BACKLIGHT_PIN, display_brightnesses[display_brightness]);
   }
   else if (power_lcdoffdelays[power_lcdoffdelay] > 0 && duration > power_lcdoffdelays[power_lcdoffdelay]) {
     powerstate = 1;
-    u8g.sleepOn();    
+    //u8g.sleepOn();
     analogWrite(DISPLAY_BACKLIGHT_PIN, 0);
   }
   else {
     // set lcd backlight
-    analogWrite(DISPLAY_BACKLIGHT_PIN, display_brightnesses[display_brightness]);
+    //analogWrite(DISPLAY_BACKLIGHT_PIN, display_brightnesses[display_brightness]);
   }
 }
 

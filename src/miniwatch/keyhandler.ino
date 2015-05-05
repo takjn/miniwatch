@@ -36,6 +36,7 @@ void getKeyPress(void) {
       last_millis = millis();
       powerstate = 0;
       u8g.sleepOff();
+      analogWrite(DISPLAY_BACKLIGHT_PIN, display_brightnesses[display_brightness]);
       if (mode_current != MODE_SETSOUND)
         beep();
     }

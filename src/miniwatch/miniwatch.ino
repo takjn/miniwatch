@@ -46,7 +46,7 @@ const int display_contrasts[4] = { 0, 10, 20, 30 };  // 4 steps contrast
 int display_contrast = 0;
 boolean display_flip = false;
 const int display_brightnesses[4] = { 0, 80, 160, 255 };   // 4 steps brightness (0=none, 255=max)
-int display_brightness = 0;
+int display_brightness = 3;
 
 // variables for watch
 time_t last_time;
@@ -56,7 +56,7 @@ const float power_voltage_max = 3.0;
 const float power_voltage_drop = 0.5;
 #define power_sleepdelay power_lcdoffdelays[power_lcdoffdelay] * 2    // powerdown (millisec, 0=never powerdown)
 const unsigned long power_lcdoffdelays[4] = {0, 5000, 10000, 30000};  // lcd off (millisec, 0=always on)
-int power_lcdoffdelay = 0;
+int power_lcdoffdelay = 2;
 unsigned long last_millis = 0;  // mills for power save mode
 int powerstate = 0;  // (0=normal, 1=backlight off, 2=powerdown)
 
@@ -76,6 +76,7 @@ void setup(void) {
   
   // set contrast
   u8g.setContrast(display_contrasts[display_contrast]);
+  analogWrite(DISPLAY_BACKLIGHT_PIN, display_brightnesses[display_brightness]);
   
   // setup rtc4534
   setupRtc();
