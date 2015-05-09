@@ -25,13 +25,12 @@ U8GLIB_NHD_C12864 u8g(13, 11, 10, 14, 12);	// SPI Com: SCK = 13, MOSI = 11, CS =
 #define RTC4534_CE 9              // pin for RTC4534 CE
 
 // settings for buzzer
-#define BUZZER_DELAY 15                        // millisec
-const int buzzer_volumes[4] = { 0, 1, 5, 10 };  // 4 steps volume (0=silence, 1024=max)
-int buzzer_volume = 1;                         // initial volume step
+const int buzzer_volumes[4] = { 0, 1, 5, 15 };  // 4 steps volume (0=silence)
+int buzzer_volume = 3;                         // initial volume step
 
 // settings for animation
 #define ANIMATION_STEP 2      // animation smoothness (1=smooth, 10=no animation)
-#define ANIMATION_MAXSTEP 8  // animation max step
+#define ANIMATION_MAXSTEP 6  // animation max step
 
 // variables for animation
 boolean animation_required = true;
@@ -73,7 +72,7 @@ uint8_t mode_prev = MODE_TIME;
 
 void setup(void) {
 //  Serial.begin(19200);
-  
+  pinMode(BUZZER_PIN,OUTPUT);
   // set contrast
   u8g.setContrast(display_contrasts[display_contrast]);
   analogWrite(DISPLAY_BACKLIGHT_PIN, display_brightnesses[display_brightness]);

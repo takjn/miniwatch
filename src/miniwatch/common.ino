@@ -1,7 +1,6 @@
 void beep(void) {
-    analogWrite(BUZZER_PIN, buzzer_volumes[buzzer_volume]);
-    delay(BUZZER_DELAY); 
-    analogWrite(BUZZER_PIN, 0);
+  if (buzzer_volume != 0)
+    tone(BUZZER_PIN, 1024, buzzer_volumes[buzzer_volume]);
 }
 
 inline boolean checkAnimationRequired(void) {
@@ -113,7 +112,8 @@ void drawWatchFrame(char *title) {
   u8g.undoScale();
 
   // battery status
-  int remain = 10 - ( (power_voltage_max - cpuVcc()) / power_voltage_drop * 10);
+  float v = cpuVcc();
+  int remain = 10 - ( (power_voltage_max - v) / power_voltage_drop * 10);
   if (remain > 10) {
     remain = 10;
   }
@@ -123,5 +123,14 @@ void drawWatchFrame(char *title) {
   }
   u8g.drawLine(16, 58 + header_offset,16, 61 + header_offset);
   
+  
+  char buffer[6];  
+  u8g.setFont(u8g_font_04b_03br);
+  u8g.setFontPosTop();
+  //u8g.setScale2x2();
+  dtostrf(v, 3, 1, buffer);
+  u8g.drawStr(20, 58, buffer);
+  //u8g.undoScale();
+
 }
 
