@@ -51,8 +51,8 @@ int display_brightness = 3;
 time_t last_time;
 
 // settings for power saving
-const float power_voltage_max = 3.0;
-const float power_voltage_drop = 0.5;
+const float power_voltage_max = 3.7;
+const float power_voltage_drop = 0.6;
 #define power_sleepdelay power_lcdoffdelays[power_lcdoffdelay] * 2    // powerdown (millisec, 0=never powerdown)
 const unsigned long power_lcdoffdelays[4] = {0, 5000, 10000, 30000};  // lcd off (millisec, 0=always on)
 int power_lcdoffdelay = 2;
