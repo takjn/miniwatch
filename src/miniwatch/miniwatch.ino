@@ -9,8 +9,9 @@
 //U8GLIB_SSD1306_128X64 u8g(10, 9, 12);		// HW SPI Com: CS = 10, A0 = 9, RST = 12 (Hardware Pins are  SCK = 13 and MOSI = 11)
 //U8GLIB_MINI12864 u8g(13, 11, 10, 9 ,12);
 //U8GLIB_MINI12864 u8g(10, 14 ,12);
-U8GLIB_NHD_C12864 u8g(13, 11, 10, 14, 12);	// SPI Com: SCK = 13, MOSI = 11, CS = 10, A0 = 9, RST = 8
+//U8GLIB_NHD_C12864 u8g(13, 11, 10, 14, 12);	// SPI Com: SCK = 13, MOSI = 11, CS = 10, A0 = 9, RST = 8
 
+U8GLIB_SSD1306_128X64 u8g(10, 14, 12);    // HW SPI Com: CS = 10, A0 = 9 (Hardware Pins are  SCK = 13 and MOSI = 11)
 
 // settings for I/O pins
 #define BUZZER_PIN 5              // pin for buzzer (need pwm)
@@ -22,7 +23,7 @@ U8GLIB_NHD_C12864 u8g(13, 11, 10, 14, 12);	// SPI Com: SCK = 13, MOSI = 11, CS =
 #define RTC4534_SCK 15            // pin for RTC4534 SCK
 #define RTC4534_DATA 16           // pin for RTC4534 DATA
 #define RTC4534_WR 17             // pin for RTC4534 RW
-#define RTC4534_CE 9              // pin for RTC4534 CE
+#define RTC4534_CE 18             // pin for RTC4534 CE
 
 // settings for buzzer
 const int buzzer_volumes[4] = { 0, 1, 5, 15 };  // 4 steps volume (0=silence)
@@ -67,6 +68,7 @@ int powerstate = 0;  // (0=normal, 1=backlight off, 2=powerdown)
 #define MODE_SETSOUND 4    // Sound
 #define MODE_STOPWATCH 5   // Stopwatch
 #define MODE_SETDISPLAY 6  // Display
+#define MODE_GAME 7  // Game
 uint8_t mode_current = MODE_TIME;
 uint8_t mode_prev = MODE_TIME;
 
@@ -74,6 +76,7 @@ void setup(void) {
 //  Serial.begin(19200);
   pinMode(BUZZER_PIN,OUTPUT);
   // set contrast
+  u8g.undoRotation();
   u8g.setContrast(display_contrasts[display_contrast]);
   analogWrite(DISPLAY_BACKLIGHT_PIN, display_brightnesses[display_brightness]);
   
@@ -118,6 +121,11 @@ void loop(void) {
   }
   else if (mode_current == MODE_SETSOUND) {
     animationLoop(drawSetsound, updateSetsound);
+  }
+  else if (mode_current == MODE_GAME) {
+//    animationLoop(renderGame, gameKeyPress);
+    drawGame();
+    gameKeyPress();
   }
   else if (mode_current == MODE_STOPWATCH) {
     if (animation_required) {
@@ -168,7 +176,7 @@ void loop(void) {
   // check power down
   checkPowerDownRequired();
   
-  if (mode_current != MODE_STOPWATCH) {
+  if (mode_current != MODE_STOPWATCH && mode_current != MODE_GAME ) {
     delay(50);
   }
 }

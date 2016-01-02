@@ -8,7 +8,7 @@ void setupRtc()
   pinMode(RTC4534_CE, OUTPUT);   // CE
 
   if (getRTC(rtc_datetime)) {
-    setRTC(15, 5, 2, 6, 22, 0, 0);
+    setRTC(16, 1, 2, 0, 0, 0, 0);
   }
 
 }

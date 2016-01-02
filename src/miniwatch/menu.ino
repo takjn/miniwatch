@@ -1,7 +1,7 @@
 
-#define MENU_ITEMS 3
-char *menu_items[MENU_ITEMS] = { "Watch", "Stopwatch", "Settings" };
-const uint8_t *menu_icons[MENU_ITEMS] = {clock_bitmap, timer_bitmap, cog_bitmap};
+#define MENU_ITEMS 4
+char *menu_items[MENU_ITEMS] = { "Watch", "Stopwatch", "Game", "Settings" };
+const uint8_t *menu_icons[MENU_ITEMS] = {clock_bitmap, timer_bitmap, game_bitmap, cog_bitmap};
 
 uint8_t menu_current = 0;
 uint8_t menu_prev = -1;
@@ -53,6 +53,10 @@ void updateMenu(void) {
           mode_current = MODE_STOPWATCH;
       }
       else if (menu_current == 2) {
+          initGame();
+          mode_current = MODE_GAME;
+      }
+      else if (menu_current == 3) {
           mode_current = MODE_SETTINGS;
       }
       
