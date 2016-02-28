@@ -23,29 +23,49 @@ boolean checkTransitionRequired(void) {
 }
 
 void checkPowerDownRequired(void) {
-  unsigned long  duration = millis() - last_millis;
+  unsigned long duration = millis() - last_millis;
   if (power_sleepdelay > 0 && duration > power_sleepdelay) {
     powerstate = 2;
     
-    // sleep    
+    // sleep
+    u8g.firstPage();
+    do  {
+      // clear
+    } while( u8g.nextPage() ); 
     u8g.sleepOn();
+    delay(10);
     attachInterrupt(1,wakeup,FALLING);
-    noInterrupts();
-    set_sleep_mode(SLEEP_MODE_PWR_DOWN);
-    sleep_enable();
-    interrupts();
-    sleep_cpu();
     
+    set_sleep_mode(SLEEP_MODE_PWR_DOWN);
+    noInterrupts();           // timed sequence follows
+    sleep_enable();
+
+    ADCSRA &= ~(1<<ADEN); //Disable ADC, saves ~230uA
+    power_all_disable();
+
+    // turn off brown-out enable in software
+    MCUCR = bit (BODS) | bit (BODSE);  // turn on brown-out enable select
+    MCUCR = bit (BODS);        // this must be done within 4 clock cycles of above
+    interrupts ();             // guarantees next instruction executed
+    //sleep_cpu ();              // sleep within 3 clock cycles of above
+    sleep_mode();
+
+
     // resume
+    power_adc_enable(); // ADC converter
+    power_spi_enable(); // SPI
+    power_timer0_enable();// Timer 0
+    power_timer2_enable();// Timer 2
+    ADCSRA |= (1<<ADEN); //Enable ADC
+    
     sleep_disable();
     detachInterrupt(1);
     u8g.sleepOff();
-//    u8g.setContrast(display_contrasts[display_contrast]);
-//    analogWrite(DISPLAY_BACKLIGHT_PIN, display_brightnesses[display_brightness]);
+    u8g.setContrast(display_contrasts[display_contrast]);
+    analogWrite(DISPLAY_BACKLIGHT_PIN, display_brightnesses[display_brightness]);
   }
   else if (power_lcdoffdelays[power_lcdoffdelay] > 0 && duration > power_lcdoffdelays[power_lcdoffdelay]) {
     powerstate = 1;
-    //u8g.sleepOn();
     analogWrite(DISPLAY_BACKLIGHT_PIN, 0);
   }
   else {
@@ -55,6 +75,7 @@ void checkPowerDownRequired(void) {
 }
 
 void wakeup() {
+  last_time = 0;
   last_millis = millis();
   powerstate = 0;
   animation_required = true;
@@ -122,8 +143,7 @@ void drawWatchFrame(char *title) {
     u8g.drawBox(2, 58 + header_offset, 2 + remain , 4 + header_offset);
   }
   u8g.drawLine(16, 58 + header_offset,16, 61 + header_offset);
-  
-  
+
   char buffer[6];  
   u8g.setFont(u8g_font_04b_03br);
   u8g.setFontPosTop();
@@ -132,5 +152,9 @@ void drawWatchFrame(char *title) {
   u8g.drawStr(20, 58, buffer);
   //u8g.undoScale();
 
+//  v = GetTemp();
+//  dtostrf(v, 3, 1, buffer);
+//  u8g.drawStr(100, 58, buffer);
+  
 }
 

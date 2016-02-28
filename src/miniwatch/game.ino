@@ -1,9 +1,9 @@
 // game settings
-#define BOARD_COLS 12    // 10 columns
+#define BOARD_COLS 10   // 10 columns
 #define BOARD_ROWS 20   // 20 BOARD_ROWS
 
-#define BLOCK_W 4            //  block width(pixels)
-#define BLOCK_H 6             //  block height(pixels)
+#define BLOCK_W 5             //  block width(pixels)
+#define BLOCK_H 5             //  block height(pixels)
 
 #define DROP_INTERVAL_INIT 250  // millisec
 
@@ -28,7 +28,6 @@ boolean gameover;
 
 void initGame(void) {
   u8g.setRot90();
-  analogWrite(DISPLAY_BACKLIGHT_PIN,1024);
   
   randomSeed(analogRead(0));
   
@@ -90,9 +89,8 @@ void tick() {
   else {
     freeze();
     clearLines();
+    
     if (gameover) {
-      
-//      newGame();
       u8g.undoRotation();
       mode_current = MODE_MENU;
       animation_required = true;
@@ -145,7 +143,7 @@ void clearLines() {
     }
     
     if (rowFilled) {
-      tone(BUZZER_PIN, 1024, 20);
+      beep();
 
       for (int yy=y; yy>0; yy--) {
         for (int x=0; x<BOARD_COLS;x++) {

@@ -1,16 +1,13 @@
 #include <avr/sleep.h>
+#include <avr/power.h>
 #include <Time.h>
 #include "U8glib.h"
 
 
 // U8GLIB constructor
 // devices with all constructor calls is here: http://code.google.com/p/u8glib/wiki/device
-//U8GLIB_SSD1306_128X64 u8g(13, 11, 10, 9, 12);	// SW SPI Com: SCK = 13, MOSI = 11, CS = 10, A0 = 9, RST = 12
-//U8GLIB_SSD1306_128X64 u8g(10, 9, 12);		// HW SPI Com: CS = 10, A0 = 9, RST = 12 (Hardware Pins are  SCK = 13 and MOSI = 11)
-//U8GLIB_MINI12864 u8g(13, 11, 10, 9 ,12);
 //U8GLIB_MINI12864 u8g(10, 14 ,12);
 //U8GLIB_NHD_C12864 u8g(13, 11, 10, 14, 12);	// SPI Com: SCK = 13, MOSI = 11, CS = 10, A0 = 9, RST = 8
-
 U8GLIB_SSD1306_128X64 u8g(10, 14, 12);    // HW SPI Com: CS = 10, A0 = 9 (Hardware Pins are  SCK = 13 and MOSI = 11)
 
 // settings for I/O pins
@@ -27,11 +24,11 @@ U8GLIB_SSD1306_128X64 u8g(10, 14, 12);    // HW SPI Com: CS = 10, A0 = 9 (Hardwa
 
 // settings for buzzer
 const int buzzer_volumes[4] = { 0, 1, 5, 15 };  // 4 steps volume (0=silence)
-int buzzer_volume = 3;                         // initial volume step
+int buzzer_volume = 0;                         // initial volume step
 
 // settings for animation
-#define ANIMATION_STEP 2      // animation smoothness (1=smooth, 10=no animation)
-#define ANIMATION_MAXSTEP 6  // animation max step
+#define ANIMATION_STEP 1      // animation smoothness (1=smooth, 10=no animation)
+#define ANIMATION_MAXSTEP 4  // animation max step
 
 // variables for animation
 boolean animation_required = true;
@@ -46,7 +43,7 @@ const int display_contrasts[4] = { 0, 10, 20, 30 };  // 4 steps contrast
 int display_contrast = 0;
 boolean display_flip = false;
 const int display_brightnesses[4] = { 0, 80, 160, 255 };   // 4 steps brightness (0=none, 255=max)
-int display_brightness = 3;
+int display_brightness = 0;
 
 // variables for watch
 time_t last_time;
@@ -56,7 +53,7 @@ const float power_voltage_max = 3.7;
 const float power_voltage_drop = 0.6;
 #define power_sleepdelay power_lcdoffdelays[power_lcdoffdelay] * 2    // powerdown (millisec, 0=never powerdown)
 const unsigned long power_lcdoffdelays[4] = {0, 5000, 10000, 30000};  // lcd off (millisec, 0=always on)
-int power_lcdoffdelay = 2;
+int power_lcdoffdelay = 1;
 unsigned long last_millis = 0;  // mills for power save mode
 int powerstate = 0;  // (0=normal, 1=backlight off, 2=powerdown)
 
@@ -68,39 +65,46 @@ int powerstate = 0;  // (0=normal, 1=backlight off, 2=powerdown)
 #define MODE_SETSOUND 4    // Sound
 #define MODE_STOPWATCH 5   // Stopwatch
 #define MODE_SETDISPLAY 6  // Display
-#define MODE_GAME 7  // Game
+#define MODE_GAME 7        // Game
 uint8_t mode_current = MODE_TIME;
 uint8_t mode_prev = MODE_TIME;
 
 void setup(void) {
-//  Serial.begin(19200);
+  // disable unused functions
+  power_usart0_disable();// Serial (USART) 
+  power_timer1_disable();// Timer 1
+  power_twi_disable(); // TWI (I2C)
+
+  // set buzzer
   pinMode(BUZZER_PIN,OUTPUT);
+  
   // set contrast
   u8g.undoRotation();
   u8g.setContrast(display_contrasts[display_contrast]);
   analogWrite(DISPLAY_BACKLIGHT_PIN, display_brightnesses[display_brightness]);
-  
+
   // setup rtc4534
   setupRtc();
   last_time = now();
   last_millis = millis();
 
-  keySetup();  // setup key detection and debounce algorithm
+  // setup key detection and debounce algorithm
+  keySetup();
 }
 
 void animationLoop(void (*draw)(void), void (*keyhandler)(void)) {
-    // animation loop
-    animation_progress = 0;
-    while (checkAnimationRequired()) {      
-      // picture loop
-      u8g.firstPage();
-      do  {
-        draw();
-      } while( u8g.nextPage() ); 
-    } 
-    
-    // update menu
-    keyhandler();
+  // animation loop
+  animation_progress = 0;
+  while (checkAnimationRequired()) {      
+    // picture loop
+    u8g.firstPage();
+    do  {
+      draw();
+    } while( u8g.nextPage() ); 
+  } 
+  
+  // update menu
+  keyhandler();
 } 
 
 
@@ -123,7 +127,6 @@ void loop(void) {
     animationLoop(drawSetsound, updateSetsound);
   }
   else if (mode_current == MODE_GAME) {
-//    animationLoop(renderGame, gameKeyPress);
     drawGame();
     gameKeyPress();
   }
@@ -172,11 +175,11 @@ void loop(void) {
   
   // check transition
   checkTransitionRequired();
-  
-  // check power down
-  checkPowerDownRequired();
-  
+    
   if (mode_current != MODE_STOPWATCH && mode_current != MODE_GAME ) {
+    // check power down
+    checkPowerDownRequired();
+    
     delay(50);
   }
 }

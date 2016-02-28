@@ -12,8 +12,8 @@ uint8_t last_key_code = KEY_NONE;
 void keySetup(void) {
   // configure input keys 
   pinMode(KEY_PIN_PREV, INPUT_PULLUP);      // set pin to input
-  pinMode(KEY_PIN_NEXT, INPUT_PULLUP);           // set pin to input
-  pinMode(KEY_PIN_SELECT, INPUT_PULLUP);         // set pin to input
+  pinMode(KEY_PIN_NEXT, INPUT_PULLUP);      // set pin to input
+  pinMode(KEY_PIN_SELECT, INPUT_PULLUP);    // set pin to input
 }
 
 void getKeyPress(void) {

@@ -22,7 +22,7 @@ void adcSetup(byte data){            // ADコンバーターの設定
   ADMUX = data;                      // ADC Multiplexer Select Reg.
   ADCSRA |= ( 1 << ADEN);            // ADC イネーブル
   ADCSRA |= 0x07;                    // AD変換クロック　CK/128
-  delay(10);                         // 安定するまで待つ
+  delay(2);                         // 安定するまで待つ
 }
  
 unsigned int adc(){                  // ADCの値を読む
